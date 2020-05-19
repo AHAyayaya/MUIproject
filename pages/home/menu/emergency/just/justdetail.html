@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../../../../css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/menu/emergency/just.css" />
+
+		<script src="../../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<title></title>
+	</head>
+	<body>
+		<div id="justdetail" class="commonclass">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title">一般上报详情</h1>
+			</header>
+			<div class="mui-content just-box">
+				<ul class="mui-table-view just-ul">
+					<li class="mui-table-view-cell just-li">
+						<label>项目名称：</label>
+						<input type="text" disabled="disabled" v-model="datajustdetail.project_name" />
+					</li>
+					<li class="mui-table-view-cell just-li" v-for="item in datajustdetail.user">
+						<label>{{item.title}}:</label>
+						<input type="text" disabled="disabled" v-model="item.realname" />
+					</li>
+					<li class="mui-table-view-cell just-li">
+						<label>公司名称：</label>
+						<input type="text" disabled="disabled" v-model="datajustdetail.company" />
+					</li>
+					<div class="mui-input-row" style="height: auto;">
+						<div class="miaosu">描述内容: </div>
+						<textarea class="justcontent" type="text" disabled="disabled">{{datajusttailbox.content}}</textarea>
+						<div class="camerabox">
+							<label for="headImage" style="background: none;"  v-for="item in datajusttailbox.imgurl">
+								<img :src="item.file_path" alt="" id="headImg">
+							</label>
+						</div>
+					</div>
+				</ul>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview(); //获取当前窗体对象
+				var bid = self.bid;
+				var cid = self.cid; //接收A页面传入的id参数值
+				new Vue({
+					el: '#justdetail',
+					data() {
+						return {
+							datajustdetail: [],
+							datajusttailbox: []
+						}
+					},
+					mounted() {
+						var _this = this;
+						$.ajax({
+							url: globalUrl + 'admin/record/projectinfo',
+							type: 'post',
+							dataType: 'json',
+							headers: { //设置http头参数
+								"authKey": authKey,
+								"sessionId": sessionId
+							},
+							data: {
+								"bid": bid //bid 项目列表
+							},
+							success(res) {
+								if (res.code == 200) {
+
+									_this.datajustdetail = res.data
+
+								} else {
+									mui.toast('网络请求失败，请刷新重试');
+								}
+							},
+							error(err) {
+								mui.toast('网络请求失败，请重试');
+							}
+						});
+						$.ajax({
+							url: globalUrl + 'admin/record/logdetail',
+							type: 'post',
+							dataType: 'json',
+							headers: { //设置http头参数
+								"authKey": authKey,
+								"sessionId": sessionId
+							},
+							data: {
+								"id": cid //cid 一般列表
+							},
+							success(res) {
+								if (res.code == 200) {
+									_this.datajusttailbox = res.data
+								} else {
+									mui.toast('网络请求失败，请刷新重试');
+								}
+							},
+							error(err) {
+								mui.toast('网络请求失败，请重试');
+							}
+						});
+					}
+				})
+			})
+		</script>
+	</body>
+</html>

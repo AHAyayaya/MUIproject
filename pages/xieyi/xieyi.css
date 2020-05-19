@@ -1,0 +1,17 @@
+html,body,.xieyi-box{
+	height: 100%;
+}
+.xieyi-box{
+	background: none;
+}
+.xieyi-title{
+	text-align: center;
+	height: 10%;
+}
+.xieyi-content{
+	height: auto;
+	width: 94%;
+	margin-left: 3%;
+	font-size: 14px;
+	text-indent: 2em;
+}

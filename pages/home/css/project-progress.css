@@ -1,0 +1,38 @@
+html,body,.project_pro_box,.project_pro_ul{
+	height: 100%;
+}
+.mui-table-view:before,.mui-table-view:after,.mui-table-view-cell:after{
+	background: none;
+}
+.fl{
+	float: left;
+}
+.fr{
+	float: right;
+}
+.project_msg{
+	overflow: hidden;
+}
+.project_pro_box{
+	width: 90%;
+	margin-left: 5%;
+	background: none;
+}
+.project_pro_li{
+	height: 30%;
+}
+.project_main{
+	border: 1px solid #EEEEEE;
+	height: 75%;
+	margin-top: 2%;
+	padding: 5%;
+}
+.project_progress{
+	height: 10px;
+	margin-top: 17%;
+	margin-bottom: 5%;
+}
+.project_progressbar{
+	height: 10px;
+	background-color: #FE0000;
+}

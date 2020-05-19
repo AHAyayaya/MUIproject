@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="../../../../../css/mui.css"/>
+	<link rel="stylesheet" type="text/css" href="css/assess.css"/>
+	<title>Document</title>
+</head>
+<body>
+<div class="assessEl">
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">考核管理</h1>
+	</header>
+	<div class="mui-content assess_box">
+		<ul class="mui-table-view assess_box_ul">
+			<li class="mui-table-view-cell assess_box_li" v-for="item in assessList">
+				<div class="assess_content" >
+					<h4 class="assessTap" :data-bid="item.bid" @click='assessClick(item.bid)'>{{item.project_name}}</h4>
+					<p class="assessTap assess_content_main" :data-bid="item.bid" @click='assessClick(item.bid)'>{{item.content}}</p>
+					<p class="assess_content_date" >项目时间：{{item.starttime}}~{{item.endtime}}</p>
+				</div>
+				<div class="assess_score" >
+					<div class="assess_score_card">
+						<!-- <span class="assess_span"></span> -->
+						<span class="assess_span" style="color: #FBBE27;" v-for="(list,index) in yellowRed" v-if="index<item.yellow">
+									<span style="">黄牌</span>
+								</span>
+						<span class="assess_span" style="color: #F72B2A;" v-for="(list,index) in yellowRed" v-if="index<item.red">
+									<span style="">红牌</span>
+								</span>
+					</div>
+					<div class="assess_score_get">
+						<span>{{item.score}}</span>
+					</div>
+					<p style="margin-left: 45%;">现得分</p>
+				</div>
+			</li>
+		</ul>
+
+	</div>
+</div>
+
+<script src="../../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../../js/jquery3.4.1.min.js"></script>
+<script src="../../../../../js/common.js"></script>
+<script src="../../../../../js/vue.min.js"></script>
+<script type="text/javascript">
+	window.addEventListener('refresh', function(e) { //执行刷新
+		location.reload();
+	});
+	
+	$(function(){
+		var vm = new Vue({
+			el:'.assessEl',
+			data() {
+				return {
+					assessList: [],
+					yellowRed: ['a','b','c','d','e','f'],//红黄牌记录
+					userrule: ''
+				}
+			},
+			components: {},
+			props: {},
+			computed: {},
+			mounted() {
+				var _this=this;
+				$.ajax({//权限接口
+					url: globalUrl+'admin/record/userrule',
+					type:'post',
+					dataType:'json',
+					headers:{ //设置http头参数
+						"authKey": authKey,
+						"sessionId": sessionId
+					},
+					data:{},
+					success(res){
+						if (res.code=='200') {
+							_this.userrule=res.error
+						}
+					},
+					error(err){
+						mui.toast('网络请求失败，请重试');
+					}
+				});
+
+
+				$.ajax({//页面接口
+					url: globalUrl+'admin/record/projectlist',
+					type:'post',
+					dataType:'json',
+					headers:{ //设置http头参数
+						"authKey": authKey,
+						"sessionId": sessionId
+					},
+					data:{
+						"is_finished": 0//1完成,0未完成
+					},
+					success(res){
+						if (res.code=='200') {
+							if (res.data.list.length>0) {//有数据
+								_this.assessList=res.data.list
+							} else{//无数据
+								mui.toast('暂无数据');
+							}
+						} else{
+							console.log(res.error);
+						}
+					},
+					error(err){
+						mui.toast('网络请求失败，请重试');
+					}
+				});
+
+			},
+			methods: {
+				assessClick(a){
+					if (this.userrule==4) {//管理员进评分,1项目总监 2现场监理 3项目经理 4管理员
+						setTimeout(function(){
+							mui.openWindow({
+								url: '../adminscore/adminscore.html',
+								extras: {
+									bid:a//自定义扩展参数，可以用来处理页面间传值
+								}
+							})
+						},50)
+					} else {//员工进考核得分
+						setTimeout(function(){
+							mui.openWindow({
+								url: '../approval_score/approval_score.html',
+								extras: {
+									bid:a//自定义扩展参数，可以用来处理页面间传值
+								}
+							})
+						},50)
+					}
+
+				}
+			}
+		});
+
+	})
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+{
+	"index.html": {
+		"resources": [
+			"pages/home/home.html",
+			"pages/agency/todo.html"
+		],
+		"refer": [
+			"pages/home/home.html",
+			"pages/agency/agency.html",
+			"pages/profile/profile.html",
+			"pages/login/login.html",
+			"pages/agency/todo.html",
+			"pages/todo/todo.html"
+		]
+	},
+	"pages/home/home.html": {
+		"refer": [
+			"pages/home/menu/emergency/emergency.html",
+			"pages/home/menu/notice.html",
+			"pages/home/time-progress.html",
+			"pages/home/project-progress.html",
+			"index.html",
+			"pages/home/menu/assess/assess.html",
+			"pages/home/menu/news.html",
+			"pages/home/menu/sign/sign.html",
+			"pages/home/time-progress/time-progress.html",
+			"pages/home/project-progress/project-progress.html",
+			"pages/home/menu/news/news.html",
+			"pages/home/menu/notice/notice.html",
+			"pages/home/menu/assess/assess/assess.html",
+			"pages/home/menu/assess/assess-score/assess-score.html",
+			"pages/home/menu/assess/assess1/assess.html",
+			"pages/home/menu/assess/score/score.html",
+			"pages/login/login.html"
+		],
+		"resources": []
+	},
+	"pages/home/menu/emergency/emergency.html": {
+		"refer": [
+			"pages/home/menu/emergency/check.html",
+			"pages/home/menu/emergency/declaration.html",
+			"pages/home/menu/emergency/node.html",
+			"pages/home/menu/emergency/everyday.html"
+		],
+		"resources": [
+			"assets/images/index/menu/emergency/emergency_btn_bg.png",
+			"assets/images/index/menu/emergency/emergency_bg.jpg"
+		]
+	},
+	"pages/login/login.html": {
+		"refer": [
+			"pages/profile/profile.html",
+			"pages/changepwd/changepwd.html",
+			"pages/register/register-phone.html",
+			"index.html"
+		],
+		"resources": []
+	},
+	"pages/home/menu/assess/assess.html": {
+		"resources": [
+			"assets/images/index/menu/assess/card.png",
+			"assets/images/index/menu/assess/score_bg.png",
+			"assets/images/index/menu/assess/project_bg.png"
+		],
+		"refer": [
+			"pages/home/menu/assess/assess_score.html"
+		]
+	},
+	"pages/changepwd/changepwd.html": {
+		"resources": [
+			"assets/images/changepwd/change_phone.png",
+			"assets/images/changepwd/change_pwd.png",
+			"assets/images/changepwd/change_bg.png",
+			"assets/images/changepwd/change_msg.png",
+			"assets/images/changepwd/change_btn.png"
+		],
+		"refer": []
+	},
+	"pages/profile/profile.html": {
+		"refer": [
+			"pages/profile/system.html",
+			"pages/profile/completed.html",
+			"pages/profile/profiledata.html",
+			"pages/profile/realname.html",
+			"pages/profile/project-detail.html",
+			"pages/profile/safe.html",
+			"pages/profile/approval.html"
+		],
+		"resources": []
+	},
+	"pages/profile/completed.html": {
+		"refer": [
+			"pages/profile/projectdata.html",
+			"pages/profile/project-detail.html"
+		],
+		"resources": []
+	},
+	"pages/register/register-phone.html": {
+		"refer": [
+			"pages/register/register-realname.html"
+		]
+	},
+	"pages/register/register-realname.html": {
+		"refer": [
+			"pages/register/register_finish.html"
+		]
+	},
+	"pages/home/menu/assess/assess/assess.html": {
+		"refer": [
+			"pages/home/menu/assess/adminscore/adminscore.html"
+		]
+	},
+	"pages/home/menu/assess/assess1/assess.html": {
+		"refer": [
+			"pages/home/menu/assess/score/score.html",
+			"pages/home/menu/assess/approval_score/approval_score.html"
+		]
+	},
+	"pages/profile/system.html": {
+		"refer": [
+			"pages/login/login.html"
+		]
+	},
+	"pages/home/time-progress/time-progress.html": {
+		"refer": [
+			"pages/profile/project-detail.html"
+		]
+	},
+	"pages/home/project-progress/project-progress.html": {
+		"refer": [
+			"pages/profile/project-detail.html"
+		]
+	}
+}

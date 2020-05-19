@@ -1,0 +1,39 @@
+html body{
+	height: 100%;
+	width: 100%;
+}
+.approval_itembox{
+	width: 80%;
+	margin-left: 10%;
+	background: none;
+}
+.approval_uploadbox{
+	padding: 2% 0;
+	background-color: #EEEEEE;
+}
+.approval_uploadbox li{
+	background-color: #FFFFFF;
+}
+.item label{
+	color: #999999;
+	font-size: 12px;
+}
+.item input::-webkit-input-placeholder{
+	color: #000000;
+}
+.approval_itembtn{
+	width: 100%;
+	display: flex;
+	margin-top: 50%;
+	height: 20%;
+}
+.approval_itembtn button{
+	width: 40%;
+	height: 3rem;
+	border: none;
+}
+.approval_itembtn_left{
+	margin-left: 7%;
+	margin-right: 5%;
+	background-color: #e26e47;
+}

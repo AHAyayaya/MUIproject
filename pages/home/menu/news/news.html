@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../../../css/mui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/menu/new.css"/>
+
+		<script src="../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../js/jquery3.4.1.min.js"></script>
+		<script src="../../../../js/common.js"></script>	
+		<script src="../../../../js/vue.min.js"></script>
+
+		<title></title>
+	</head>
+	<body>
+	<div id="vue">
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">新闻资讯</h1>
+		</header>
+		    <div class="mui-scroll-wrapper" id="refreshContainer" style="margin-top: 44px;">
+		        <div class="mui-scroll">
+		            <!--这里放置真实显示的DOM内容-->
+		            <ul class="mui-table-view news_box">
+		                <li class="mui-table-view-cell mui-media news_li" v-for="item in datanews" :data-nid="item.id">
+		                        <img class=" mui-pull-right news_img" :src="item.file_path">
+		                        <p class="mui-media-body news_container">
+															{{item.title}}
+		                        </p>
+														<div class="news-content">{{item.content}}</div>
+		                        <p style="display: flex;"><img src="../../../../assets/images/login/newsimg/data.png"/>{{item.addtime}}</p>
+		                </li>
+		            </ul>
+		        </div>
+		    </div>
+	</div>
+		<script type="text/javascript">
+			new Vue({
+				el:'#vue',
+				data() {
+				  return {
+				    datanews: []
+				  }
+				},
+				mounted() {
+					var _this = this;
+					// var newsid=localStorage.getItem('nid');//项目id
+					$.ajax({
+						url: globalUrl + 'admin/record/news',
+						type: 'post',
+						dataType: 'json',
+						headers: { //设置http头参数
+							"authKey": authKey,
+							"sessionId": sessionId
+						},
+						data: {
+						},
+						success(res) {
+							if (res.code == '200') {
+								// $.each(res.data.list, function(index, value) {
+								// 	localStorage.setItem('nid',value.id);//当前被点击的id
+								// });
+								if (res.data.list.length>0) {
+									_this.datanews=res.data.list
+								} else{
+									// _this.dataList=[]
+									// _this.dataList.starttime=''
+									// _this.dataList.endtime=''
+									mui.toast('暂无数据');
+								}
+							} else {
+								mui.toast(res.error);
+							}
+						},
+						error(err) {
+							mui.toast('网络请求失败，请重试');
+						}
+					});
+				}
+			})
+			$(document).on('tap', '.news_li', function() {
+				var nid = $(this).data('nid');
+				setTimeout(function() {
+					//跳转传参
+					mui.openWindow({
+						url: 'news-detail.html',
+						extras: {
+							nid: nid ,//自定义扩展参数，可以用来处理页面间传值  
+						}
+					});
+				}, 1000);
+			})
+		</script>
+
+	</body>
+</html>

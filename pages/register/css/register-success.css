@@ -1,0 +1,33 @@
+.examine_box{
+	background-color: #ffffff;
+  margin-top: 10%;
+  padding: 25%;
+}
+.tc{
+	text-align: center;
+}
+.tc img{
+	width: 25%;
+}
+.examine_box_font{
+	margin-top: 10%;
+}
+.examine_success{
+	margin-top: 5%;
+  font-size: 10px;
+  color: #B2B2B2;
+}
+.examine_star{
+	display: flex;
+	margin-top: 15%;
+}
+.examine_box_img{
+	margin-left: -0.5rem;
+	margin-right: -0.5rem;
+}
+.mt{
+	margin-top: 7%;
+	width: 60%;
+  height: 1px;
+  background-color: #eeeeee;
+}

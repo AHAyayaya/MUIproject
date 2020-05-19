@@ -1,0 +1,103 @@
+html,body,.sign-box{
+	height: 100%;
+}
+
+.sign-box{
+	background: none;
+}
+
+.fl{
+	float: left;
+}
+
+.fr{
+	float: right;
+}
+
+.sign-date{
+	margin: 8px;
+}
+
+.date-text{
+	display: flex;
+}
+
+.date-text span{
+	width: 50%;
+	margin-top: 5px;
+	font-size: 1rem;
+}
+.Qdtime{
+	width: 30% !important;
+}
+.QdSpan{
+	width: 70% !important;
+}
+
+.date-bottom{
+	text-align: end;
+	font-size: 12px;
+}
+
+.sign-map{
+	margin-top: 5%;
+	height: 40%;
+}
+
+.mapcontent{
+	height: 75%;
+	background-color: #fff;
+}
+
+.sign-camera{
+	height: 30%;
+}
+
+.sign-img{
+	width: 94%;
+	height: 100%;
+	margin-left: 3%;
+}
+
+.sign-img img{
+	/* width: 100%;
+	height: 100%; */
+	/* box-shadow: 5px 5px #EEEEEE; */
+}
+
+.sign-btn{
+	padding: 5%;
+}
+
+.sign-btn button{
+	width: 40%;
+	height: 2.5rem;
+	line-height: 1rem;
+	color: #fff;
+	border: none;
+}
+
+
+
+.camerabox{
+	width: 100%;
+	height: 100%;
+	display: block;
+	border: 1px solid #c8c7cc;
+}
+/* .camerabox label{
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	background: url(../../../../assets/images/index/node_img.png) no-repeat center center;
+	border: 1px solid #c8c7cc;
+} */
+/* .camerabox label img{
+	display: block;
+	width: 100%;
+	height: 100%;
+	box-shadow: none
+} */
+#headImage{
+	display: none;
+}

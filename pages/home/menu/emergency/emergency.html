@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="../../../../css/mui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/menu/emergency/emergency.css" />
+
+	<title></title>
+</head>
+<body style="">
+<div class="emergencyVue">
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">应急养护</h1>
+	</header>
+	<div class="emergency_box box1">
+		<button type="button" class="mui-btn mui-btn-blue mui-btn-block" style="margin-top: 30%;">项目申报</button>
+	</div>
+	<div class="emergency_box box2">
+		<button type="button" class="mui-btn mui-btn-blue mui-btn-block">一般上报</button>
+	</div>
+	<div class="emergency_box box3">
+		<button type="button" class="mui-btn mui-btn-blue mui-btn-block">节点上报</button>
+	</div>
+	<div class="emergency_box box4">
+		<button type="button" class="mui-btn mui-btn-blue mui-btn-block">核定/签证上报</button>
+	</div>
+</div>
+
+<script src="../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '.emergencyVue',
+		data() {
+			return {}
+		},
+		components: {},
+		props: {},
+		computed: {},
+		mounted() {
+			var _this = this;
+			$.ajax({
+				url: globalUrl + 'admin/record/userrule',
+				type: 'post',
+				dataType: 'json',
+				headers: { //设置http头参数
+					"authKey": authKey,
+					"sessionId": sessionId
+				},
+				data: {},
+				success(res) {
+					if (res.code == '200') {
+						// 1或2只显示一般上报,3都显示,4都隐藏
+						if (res.error==1||res.error==2){//1项目总监 2现场监理 3项目经理 4管理员
+							$('.box1').hide();
+							$('.box3').hide();
+							$('.box4').hide();
+						}
+						if (res.error==4){
+							$('.emergency_box').hide();
+						}
+					} else {
+						console.log(res.error);
+					}
+				},
+				error(err) {
+					mui.toast('网络请求失败，请重试');
+				}
+			});
+
+		},
+		methods: {}
+	});
+</script>
+<script type="text/javascript">
+	mui.plusReady(function() {
+		var self = plus.webview.currentWebview(); //获取当前窗体对象
+		var projecttype = self.projecttype; //接收A页面传入的id参数值
+
+		var page = ["declaration.html", "just/justproject.html", "node/nodeproject.html", "check/checkproject.html"];
+		var arr = document.getElementsByClassName("emergency_box");
+		for (var i = 0; i < arr.length; i++) {
+			! function(i) {
+				arr[i].addEventListener("tap", function() {
+					mui.openWindow({
+						url: page[i],
+						id: page[i],
+						extras: {
+							projecttype: projecttype,
+						}
+					})
+				})
+			}(i);
+		}
+	})
+</script>
+</body>
+</html>

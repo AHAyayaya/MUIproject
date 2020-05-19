@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="css/register-phone.css" />
+		<link rel="stylesheet" type="text/css" href="css/register-realname.css" />
+
+		<script src="../../js/mui.js"></script>
+		<script src="../../js/jquery3.4.1.min.js"></script>
+		<script src="../../js/common2.js"></script>
+		<title></title>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></span>
+			<h1 class="mui-title">账户注册</h1>
+		</header>
+		<div class="mui-content">
+			<div class="step_box">
+				<div>
+					<img class="step_box_img mui-active" src="../../assets/images/register/register_phone.png" />
+					<span class="step_box_font">手机注册</span>
+				</div>
+				<div class="step_bt"></div>
+				<div>
+					<img class="step_box_img" src="../../assets/images/register/register_realname_active.png" />
+					<span class="step_box_font">实名认证</span>
+				</div>
+				<div class="step_bt"></div>
+
+				<div>
+					<img class="step_box_img" src="../../assets/images/register/register_finish.png" />
+					<span class="step_box_font">注册完成</span>
+				</div>
+			</div>
+			<!--步骤条结束-->
+			<!--选择单位开始-->
+			<div class="choose_box">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block SGunit">施工单位</button>
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block GLunit">监理单位</button>
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block Management">管理所</button>
+			</div>
+			<!--选择单位结束-->
+		</div>
+		<button type="button" class="mui-btn mui-btn-blue mui-btn-block register_btn btn_bottom nextStep2">下一步</button>
+
+		<script type="text/javascript">
+			//读取保存在localStorage对象里名为registerId的变量值res.id
+			var registerId = localStorage.getItem('registerId'); //公司种类id
+
+			var zid = ''
+			$('.SGunit').on('tap', function() { //施工单位
+				zid = 2;
+				$(this).attr('id', 'SGunit').addClass('background_color').siblings().removeClass('background_color')
+			})
+			$('.GLunit').on('tap', function() { //监理单位
+				zid = 3;
+				$(this).attr('id', 'GLunit').addClass('background_color').siblings().removeClass('background_color')
+			})
+			$('.Management').on('tap', function() { //管理所
+				zid = 1;
+				$(this).attr('id', 'Management').addClass('background_color').siblings().removeClass('background_color')
+			})
+			$('.nextStep2').on('tap', function() {
+				if (document.getElementById('SGunit') || document.getElementById('GLunit') ||
+					document.getElementById('Management')) {
+					setTimeout(function() {
+						// location.href='register_finish.html?id='+getUrlParams.id+'&structure_id='+zid;
+						//跳转传参
+						localStorage.setItem('structure_id', zid); //存储名字为registerId值为res.id
+						mui.openWindow({
+							url: './register_finish.html?id=' + registerId + '&structure_id=' + zid,
+							// id:''//String类型,要打开的界面的id
+						});
+					}, 1000);
+				} else {
+					mui.toast('请选择注册类型');
+					return false
+				}
+
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,49 @@
+body{
+	margin-bottom: 3.5rem;
+	background-color: #FFFFFF;
+}
+.mui-bar{
+	height: 45px;
+}
+.h-text{
+	color: #FFFFFF;
+}
+.header{
+	background-color: #66b1f9;
+}
+.mui-bar-tab{
+	background-color: #FFFFFF;
+}
+.mui-bar-tab .mui-tab-item.mui-active{
+	color: #facb7e;
+}
+.c-patrol{
+	background-image: url(../assets/images/index/patrol.png);
+	background-size: cover;
+}
+.mui-bar-tab .mui-tab-item.mui-active .c-patrol{
+	background-image: url(../assets/images/index/patrol_active.png);
+	background-size: cover;
+}
+.tab-font{
+	font-size: 16px !important;
+}
+.tab-icon{
+	width: 27px !important;
+}
+.c-agency{
+	background-image: url(../assets/images/index/agency.png);
+	background-size: cover;
+}
+.mui-bar-tab .mui-tab-item.mui-active .c-agency{
+	background-image: url(../assets/images/index/agency_active.png);
+	background-size: cover;
+}
+.c-profile{
+	background-image: url(../assets/images/index/profile.png);
+	background-size: cover;
+}
+.mui-bar-tab .mui-tab-item.mui-active .c-profile{
+	background-image: url(../assets/images/index/profile_active.png);
+	background-size: cover;
+}

@@ -1,0 +1,95 @@
+html,body,.score_box{
+	height: 100%;
+}
+
+.score_box{
+	background: url(../../../../../../assets/images/index/menu/assess/assess_score_bg.jpg)no-repeat;
+	background-size: 100% 100%;
+}
+
+.score-date{
+	width: 40%;
+	height: 20%;
+	position: absolute;
+	top: 20%;
+	left: 30%;
+	text-align: center;
+	line-height: 2rem;
+}
+
+.score-date span{
+	display: block;
+}
+
+.reason-bg{
+	position: absolute;
+	top: 50%;
+	left: 4%;
+	height: 2.5rem;
+	width: 20%;
+	background: url(../../../../../../assets/images/index/menu/assess/deduction_bg.png)no-repeat;
+	background-size: 100% 100%;
+	text-align: center;
+	line-height: 2.5rem;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.reason-content{
+	position: absolute;
+	top: 50%;
+	left: 26%;
+	width: 69%;
+	height: 38%;
+	overflow: auto;
+}
+
+/* .reason-content span{
+	display: block;
+} */
+
+
+.headItem>.h5{
+	font-size: 15px;
+	color: #000;
+	font-weight: bold;
+	height: 2.1rem;
+	line-height: 2.6rem;
+	margin: 0;
+	width: 100%;
+}
+.headItem p{
+	margin: 0;
+	width: 100%;
+	word-wrap:break-word
+}
+.headItem ul{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.headItem li{
+	width: 100%;
+}
+.headItem li span{
+	color: #000;
+	font-size: 14px;
+	width: 80%;
+	display: inline-block;
+	font-weight: bold;
+}
+.headItem .scoreSpan{
+	text-align: center;
+	width: 15%;
+}
+
+.el-collapse-item__header{
+	height: 33px !important;
+	line-height: 33px !important;
+}
+.el-collapse{
+	border-top: 0 !important;
+}
+.el-collapse-item__content {
+	padding-bottom: 0px !important;
+}

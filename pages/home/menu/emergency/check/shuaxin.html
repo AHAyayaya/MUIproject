@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">   
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>mui上拉刷新下拉加载demo--封装</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../css/mui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/menu/emergency/just.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/menu/emergency/mynode.css" />
+    
+    <script src="../../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<div id="mycheck" style="height: 100%;">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">我的核定/签证上报</h1>
+			<button class="mui-icon mui-icon-plus mui-pull-right add-btn"></button>
+		</header>
+   <!--下拉刷新容器-->
+   <div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+     <div class="mui-scroll">
+       <!--数据列表-->
+       <ul class="mui-table-view mui-table-view-chevron">
+         <li class="mui-table-view-cell report_li" v-for="item in datamycheck" :data-cid="item.id">
+         	<div class="report_date">
+         		<h4>{{item.addtime[1]}}</h4>
+         		<p>{{item.addtime[0]}}</p>
+         	</div>
+         	<div class="report_content">
+         		<div class="report_content_img">
+         			<img :src="item.imgurl[0].file_path" />
+         		</div>
+         		<div class="report_content_text">
+         			{{item.content}}
+         		</div>
+         		<div class="report_file">
+         			<div class="file">附件</div>
+         				<div class="file_check" v-if="item.sh_code == 2">
+         					{{item.is_sh}}
+         				</div>
+         				<div class="file_check" style="background-color: red;color: #fff;" v-if="item.sh_code == 3">
+         					{{item.is_sh}}
+         				</div>
+         				<div class="file_check" style="background-color: #EEEEEE;" v-if="item.sh_code == 1">
+         					{{item.is_sh}}
+         				</div>
+         		</div>
+         	</div>
+         </li>
+       </ul>
+     </div>
+   </div>
+	</div>
+</body>
+<script type="text/javascript" charset="utf-8">
+   
+   mui.init({
+     pullRefresh : {
+       container:"#pullrefresh",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+       down : {
+				 style: 'circle',
+         callback :callfunction //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+       }
+     }
+   });
+	 
+	 function callfunction() {
+		setTimeout(function () {//定时器，提升用户体验
+			//......//实现更新页面的操作，一般上就是ajax请求数据，页面动态加载元素
+			 mui.toast('更新了5篇文章');
+			 mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //完成刷新
+		}, 1000);
+	}
+	 						
+	 						
+	 mui.plusReady(function() {
+	 	var self = plus.webview.currentWebview(); //获取当前窗体对象
+	 	var bid = self.bid; //接收A页面传入的id参数值
+	 	new Vue({
+	 		el: '#mycheck',
+	 		data() {
+	 			return {
+	 				datamycheck: []
+	 			}
+	 		},
+	 		mounted() {
+	 			var _this = this;
+	 
+	 			$.ajax({
+	 				url: globalUrl + 'admin/record/loglist',
+	 				type: 'post',
+	 				dataType: 'json',
+	 				headers: { //设置http头参数
+	 					"authKey": authKey,
+	 					"sessionId": sessionId
+	 				},
+	 				data: {
+	 					"bid": bid,
+	 					"type": 3,
+	 				},
+	 				success(res) {
+	 					if (res.code == '200') {
+	 						if (res.data.list.length > 0) {
+	 							_this.datamycheck = res.data.list
+	 						} else {
+	 							_this.dataList = []
+	 							mui.toast('暂无数据');
+	 						}
+	 					} else {
+	 						mui.toast(res.error);
+	 					}
+	 				},
+	 				error(err) {
+	 					mui.toast('网络请求失败，请重试');
+	 				}
+	 			});
+	 		}
+	 	})
+	 	$(document).on('tap', '.add-btn', function() {
+	 		setTimeout(function() {
+	 			//跳转传参
+	 			mui.openWindow({
+	 				url: 'check.html',
+	 				extras: {
+	 					bid: bid //自定义扩展参数，可以用来处理页面间传值  
+	 				}
+	 			});
+	 		}, 500);
+	 	});
+	 	$(document).on('tap', '.report_li', function() {
+	 		var cid = $(this).data('cid');
+	 		setTimeout(function() {
+	 			//跳转传参
+	 			mui.openWindow({
+	 				url: 'checkdetail.html',
+	 				extras: {
+	 					bid: bid,
+	 					cid: cid //自定义扩展参数，可以用来处理页面间传值  
+	 				}
+	 			});
+	 		}, 500);
+	 	})
+	 })
+</script>
+</html>

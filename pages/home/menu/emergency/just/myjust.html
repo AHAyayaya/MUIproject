@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../../../../css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/menu/emergency/mynode.css" />
+
+		<script src="../../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<title></title>
+	</head>
+	<body>
+		<div id="myjust" style="height: 100%;">
+			<header class="mui-bar mui-bar-nav">
+				<span class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff;"></span>
+				<h1 class="mui-title">一般上报列表</h1>
+				<button class="mui-icon mui-icon-plus mui-pull-right add-btn"></button>
+			</header>
+			<div class="mui-content report_box">
+				<ul class="mui-table-view report_ul">
+					<li class="mui-table-view-cell report_li" v-for="item in datamyjust" :data-cid="item.id">
+						<div class="report_date">
+							<h4>{{item.addtime[1]}}</h4>
+							<p>{{item.addtime[0]}}</p>
+						</div>
+						<div class="report_content">
+							<div class="report_content_img">
+								<!-- <img :src="item.imgurl[0].file_path" /> -->
+								<img :src="imgItem.file_path" v-for="(imgItem,index) in item.imgurl" v-if="index==0">
+							</div>
+							<div class="report_content_text">
+								{{item.content}}
+							</div>
+							<div class="report_file">
+								<div class="file_check" v-if="item.sh_code == 2">
+									{{item.is_sh}}
+								</div>
+								<div class="file_check" style="background-color: red;color: #fff;" v-if="item.sh_code == 3">
+									{{item.is_sh}}
+								</div>
+								<div class="file_check" style="background-color: #EEEEEE;" v-if="item.sh_code == 1">
+									{{item.is_sh}}
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script type="text/javascript">
+			window.addEventListener('refresh', function() {
+							plus.webview.getWebviewById('myjust.html').reload();
+			//刷新调用方法
+			})
+			mui.init({
+				beforeback: function() {
+			
+					var list = plus.webview.currentWebview().opener();
+					//refresh是A页面自定义事件
+					mui.fire(list, 'refresh');
+					//返回true,继续页面关闭逻辑
+					return true;
+				}
+			});
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview(); //获取当前窗体对象
+				var bid = self.bid; //接收A页面传入的id参数值
+				new Vue({
+					el: '#myjust',
+					data() {
+						return {
+							datamyjust: []
+						}
+					},
+					mounted() {
+						var _this = this;
+
+						$.ajax({
+							url: globalUrl + 'admin/record/loglist',
+							type: 'post',
+							dataType: 'json',
+							headers: { //设置http头参数
+								"authKey": authKey,
+								"sessionId": sessionId
+							},
+							data: {
+								"bid": bid,
+								"type": 1,
+							},
+							success(res) {
+								if (res.code == '200') {
+									if (res.data.list.length > 0) {
+										_this.datamyjust = res.data.list
+									} else {
+										_this.dataList = []
+										mui.toast('暂无数据');
+									}
+								} else {
+									mui.toast(res.error);
+								}
+							},
+							error(err) {
+								mui.toast('网络请求失败，请重试');
+							}
+						});
+					}
+				})
+				$(document).on('tap', '.add-btn', function() {
+					setTimeout(function() {
+						//跳转传参
+						mui.openWindow({
+							url: 'just.html',
+							extras: {
+								bid: bid //自定义扩展参数，可以用来处理页面间传值  
+							}
+						});
+					}, 500);
+				});
+				$(document).on('tap', '.report_li', function() {
+					var cid = $(this).data('cid');
+					setTimeout(function() {
+						//跳转传参
+						mui.openWindow({
+							url: 'justdetail.html',
+							extras: {
+								bid: bid ,//自定义扩展参数，可以用来处理页面间传值 
+								cid: cid //自定义扩展参数，可以用来处理页面间传值  
+							}
+						});
+					}, 500);
+				});
+			})
+		</script>
+	</body>
+</html>

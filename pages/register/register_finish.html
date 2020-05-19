@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.poppicker.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.picker.css" />
+		<link rel="stylesheet" type="text/css" href="css/register-phone.css" />
+		<link rel="stylesheet" type="text/css" href="css/register-finish.css" />
+
+		<script src="../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.picker.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.poppicker.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.picker.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/jquery3.4.1.min.js"></script>
+		<script src="../../js/common2.js" type="text/javascript" charset="utf-8"></script>
+		<title></title>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">账户注册</h1>
+		</header>
+		<div class="mui-content">
+			<div class="step_box">
+				<div>
+					<img class="step_box_img mui-active" src="../../assets/images/register/register_phone.png" />
+					<span class="step_box_font">手机注册</span>
+				</div>
+				<div class="step_bt"></div>
+				<div>
+					<img class="step_box_img" src="../../assets/images/register/register_realname.png" />
+					<span class="step_box_font">实名认证</span>
+				</div>
+				<div class="step_bt"></div>
+
+				<div>
+					<img class="step_box_img" src="../../assets/images/register/register_finish_active.png" />
+					<span class="step_box_font">注册完成</span>
+				</div>
+			</div>
+
+			<form class="mui-input-group register_box">
+				<div class="mui-input-row register_box_main">
+					<label>单位名称<font color="red">*</font></label>
+					<input type="text" class="mui-input-clear unitname companyName" value="" placeholder="请输入公司名称">
+				</div>
+				<div class="mui-input-row register_box_main yourPost">
+					<label>您的职位<font color="red">*</font></label>
+					<select id="selectZW" name="">
+
+					</select>
+				</div>
+				<div class="mui-input-row register_box_main">
+					<label>证件类型<font color="red">*</font></label>
+					<select class="ZJtype">
+						<!-- <option value ="0">请选择</option> -->
+						<option value="1">居民身份证</option>
+					</select>
+					<!-- <button id='showUserPicker' class="mui-btn mui-btn-block certificates" type='button'>
+				请选择证件类型</button>
+			              <div id='userResult' class="ui-alert" style="line-height: 0;"></div> -->
+				</div>
+				<div class="mui-input-row register_box_main">
+					<label>证件号码<font color="red">*</font></label>
+					<input type="text" class="mui-input-clear idcard" placeholder="请输入证件号码" value="">
+				</div>
+				<div class="mui-input-row register_box_main">
+					<label>真实姓名<font color="red">*</font></label>
+					<input type="text" class="mui-input-clear realname" value="" placeholder="请填写真实姓名">
+				</div>
+				<div class="mui-input-row register_box_main">
+					<label>关联资质<font color="red">*</font></label>
+					<!-- <input type="text" class="mui-input-clear" placeholder="资料上传"> -->
+				</div>
+				<div class="uploadImg" style="display: flex;">
+					<div class="finishUpload finishUploadS">
+						<label for="finishImageS">
+							<img src="" alt="" class="finishImgS">
+						</label>
+						<input type="file" name="img" id="finishImageS">
+					</div>
+					<div class="finishUpload finishUploadY">
+						<label for="finishImageY">
+							<img src="" alt="" class="finishImgY">
+						</label>
+						<input type="file" name="img" id="finishImageY">
+					</div>
+
+
+				</div>
+				<div>
+					<button type="button" class="mui-btn mui-btn-blue mui-btn-block register_btn submitBtn">提交</button>
+				</div>
+			</form>
+		</div>
+
+		<div class="pop"></div>
+		<div class="pop-content">
+			<div class="pop-top">
+				<span class="mui-icon mui-icon-spinner mui-spin"></span>
+				<p>审核中...</p>
+			</div>
+			<div class="pop-main">
+				<h4>提交成功，等待审核</h4>
+				<p style="color: #999999;">预计3个工作日内审核完毕，审核结果会短信通知到您的手机上</p>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			var registerId = localStorage.getItem('registerId'); //用户id
+			var structure_id = localStorage.getItem('structure_id'); //公司种类id
+
+			$(function() {
+				//职位接口
+				loadFunction();
+			})
+
+			function loadFunction() { 
+				$.ajax({
+					url: globalUrl + 'admin/base/group',
+					type: 'post',
+					dataType: 'json',
+					data: {},
+					success(res) {
+						console.log(res)
+						if (res.code == '200') {
+							$('.yourPost select').append($('<option value="0" class="structure_id">请选择职位</option>'));
+							$.each(res.list, function(index, value) {
+								// console.log(index+' '+value.id+' '+value.title);
+								var $item = postList(index, value);
+								$('.yourPost select').append($item);
+							});
+						} else {
+							mui.toast('网络请求失败，请重试');
+						}
+					},
+					error(err) {
+						mui.toast('网络请求失败，请重试');
+					}
+				});
+
+				function postList(index, value) {
+					var $item = $('<option value=' + value.id + ' class="structure_id">' + value.title + '</option>');
+					return $item;
+				}
+
+			}
+
+			//上传图片接口
+			var file_idBox = '' //zizhi的参数,图片上传id字符串'12,13,14'
+			$('.finishUploadS').on('change', function() {
+				var fileObj = document.getElementById('finishImageS').files[0]; // js 获取文件对象
+				if (fileObj.type == 'image/jpeg' || fileObj.type == 'image/png') { //只能上传jpg和png格式
+					if (typeof(fileObj) == "undefined" || fileObj.size <= 0) {
+						alert("请选择文件，且文件不能为空");
+						return false;
+					}
+					if (fileObj.size >= 104857600) {
+						alert("请上传小于100M的文件！");
+						return false;
+					}
+					var formFile = new FormData();
+					// formFile.append("action", "UploadVMKImagePath");
+					formFile.append("file", fileObj); //加入文件对象
+					formFile.append("uid", "1"); //加入文件对象
+					formFile.append("filetype", "img"); //是图片值为img
+					// formFile.append("filetype", "file"); //是文件值为file,上传哪种要通过fileObj.type判断
+					formFile.append("name", "img"); //加入文件对象
+					formFile.append("module", "crm_contacts"); //加入文件对象
+					formFile.append("module_id", "1"); //加入文件对象
+					var data = formFile;
+					// for (var key of formFile.entries()) {//返回接口的全部参数
+					// 	console.log(key[0] + ', ' + key[1]);
+					// }
+					$.ajax({
+						url: globalUrl + 'admin/base/imgup1',
+						type: 'post',
+						dataType: 'json',
+						data: data,
+						cache: false,
+						processData: false, //参数进行序列化处理
+						contentType: false, //必须
+						success(res) {
+							if (res.state == 1) { //code为0失败,1成功
+								file_idBox += res.file_id + ',' //图片上传id字符串'12,13,14'
+								$('.finishImgS').attr('src', res.path);
+								$('.finishUploadS label').css('background', 'none');
+							} else {
+								mui.toast(res.path);
+							}
+						},
+						error(err) {
+							mui.toast('网络请求失败，请重试');
+						}
+					});
+				} else {
+					mui.toast('上传格式不正确，请重试');
+				}
+			})
+			$('.finishUploadY').on('change', function() {
+				var fileObj = document.getElementById('finishImageY').files[0]; // js 获取文件对象
+				if (fileObj.type == 'image/jpeg' || fileObj.type == 'image/png') { //只能上传jpg和png格式
+					if (typeof(fileObj) == "undefined" || fileObj.size <= 0) {
+						alert("请选择文件，且文件不能为空");
+						return false;
+					}
+					if (fileObj.size >= 104857600) {
+						alert("请上传小于100M的文件！");
+						return false;
+					}
+					var formFile = new FormData();
+					// formFile.append("action", "UploadVMKImagePath");
+					formFile.append("file", fileObj); //加入文件对象
+					formFile.append("uid", "1"); //加入文件对象
+					formFile.append("name", "img"); //加入文件对象
+					formFile.append("module", "crm_contacts"); //加入文件对象
+					formFile.append("module_id", "1"); //加入文件对象
+					var data = formFile;
+					// for (var key of formFile.entries()) {//返回接口的全部参数
+					// 	console.log(key[0] + ', ' + key[1]);
+					// }
+					$.ajax({
+						url: globalUrl + 'admin/base/imgup1',
+						type: 'post',
+						dataType: 'json',
+						data: data,
+						cache: false,
+						processData: false, //参数进行序列化处理
+						contentType: false, //必须
+						success(res) {
+							if (res.state == 1) { //code为0失败,1成功
+								file_idBox += res.file_id + ',' //图片上传id字符串'12,13,14'
+								$('.finishImgY').attr('src', res.path);
+								$('.finishUploadY label').css('background', 'none');
+							} else {
+								mui.toast(res.path);
+							}
+						},
+						error(err) {
+							mui.toast('网络请求失败，请重试');
+						}
+					});
+				} else {
+					mui.toast('上传格式不正确，请重试');
+				}
+			})
+
+			$('.finishUploadS').on('tap', function() { //上传图片
+				$(this).attr('id', 'FunIdS')
+			})
+			$('.finishUploadY').on('tap', function() { //上传图片
+				$(this).attr('id', 'FunIdY')
+			})
+
+			//提交按钮接口
+			$('.submitBtn').on('tap', function() {
+				var companyNameVal = $.trim($('.companyName').val()),
+					idcardVal = $.trim($('.idcard').val()),
+					realnameVal = $.trim($('.realname').val()),
+					options = $(".yourPost select option:selected"), //获取选中的项
+					optionsVal = options.val(); //获取职位选中项的index值
+				if (companyNameVal == '') {
+					mui.toast('请输入公司名称');
+					return false
+				}
+				if (optionsVal == '0') {
+					mui.toast('请选择职位');
+					return false
+				}
+				if (idcardVal == '') {
+					mui.toast('请输入证件号码!');
+					return false
+				} else {
+					//十五位和十八位结合正则
+					var idcardReg =
+						/(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}[0-9Xx]$)/;
+					if (!(idcardReg.test(idcardVal))) {
+						mui.toast('证件号码格式不正确,请重试');
+						return false
+					}
+				}
+				if (realnameVal == '') {
+					mui.toast('请输入真实姓名!');
+					return false
+				} else {
+					// var realnameReg = /^[\u4E00-\u9FA5]{2,4}$/;//只包含中文
+					var realnameReg = /^[\u4e00-\u9fa5_a-zA-Z0-9]+$/; //匹配中文，英文字母和数字及_:
+					if (!(realnameReg.test(realnameVal))) {
+						mui.toast('真实姓名格式不正确,请重试');
+						return false
+					}
+				}
+				if (document.getElementById('FunIdS') && document.getElementById('FunIdY')) { //有上传图片才执行请求
+					$.ajax({
+						url: globalUrl + 'admin/base/register2',
+						type: 'post',
+						dataType: 'json',
+						data: {
+							"id": registerId, //用户id
+							"structure_id": structure_id, //公司种类id
+							"company": companyNameVal, //公司名称
+							"group_id": optionsVal, //职位/角色id (经理。总监，监理 )
+							"idcard": idcardVal, //证件号码
+							"realname": realnameVal, //真实姓名
+							"zizhi": file_idBox // file_id,图片上传id字符串'12,13,14'
+						},
+						success(res) {
+							if (res.code == '200') {
+									$('.pop').show()
+									$('.pop-content').show()
+								mui.toast(res.error);
+								// setTimeout(function() {
+								// 	localStorage.removeItem('registerId');
+								// 	localStorage.removeItem('structure_id');
+								// 	//跳转传参
+								// 	mui.openWindow({
+								// 		// url:'./register-realname.html',//通过URL传参
+								// 		// id:''//String类型,要打开的界面的id
+								// 	});
+								// }, 1000);
+							} else {
+								mui.toast(res.error);
+							}
+						},
+						error(err) {
+							mui.toast('网络请求失败，请重试');
+						}
+					});
+
+				} else {
+					mui.toast('请完善关联资质');
+					return false
+				}
+
+
+
+			})
+		</script>
+	</body>
+</html>

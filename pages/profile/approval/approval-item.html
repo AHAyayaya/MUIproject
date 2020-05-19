@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="../../../css/mui.css" />
+	<link rel="stylesheet" type="text/css" href="../css/approval-item.css" />
+
+	<style type="text/css">
+		.camera {
+			font-size: 3rem;
+			margin-left: 3%;
+			margin-bottom: 3%;
+			width: 80px;
+			height: 80px;
+			display: inline-block;
+			background-color: #F9F9F9;
+			text-align: center;
+			/* padding: 9%; */
+		}
+		.approval_uploadbox {
+			padding: 0;
+			background-color: #fff;
+		}
+		.camerabox span {
+			float: right;
+			margin-right: 30%;
+			margin-top: 11%;
+		}
+		.camerabox {
+			height: 100px;
+			margin-bottom: 10px;
+		}
+		.camerabox label {
+			padding: 0;
+			width: 35%;
+			height: 100%;
+			background: url(../../../assets/images/index/node_img.png) no-repeat center center;
+			border: 1px solid #c8c7cc;
+			display: block;
+		}
+		.camerabox label img {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+		#headImage,#headfile{
+			display: none;
+		}
+		.filelabel{
+			margin-bottom: 10px;
+			padding: 5px 15px !important;
+			border: 1px solid #E8E8E8;
+		}
+		.mui-input-row label ~ input{
+			font-size: 12px;
+			width: 60%;
+		}
+		.mui-input-row label {
+			line-height: 21px;
+			width: 40%;
+		}
+		.textareaDiv{
+			height: 70px !important;
+		}
+		.textareaDiv textarea{
+			font-size: 12px !important;
+			width: 62% !important;
+			position: absolute;
+			left: 40%;
+			top: 0;
+		}
+		.mui-navigate-right{
+			font-size: 12px;
+			color: #999999 !important;
+		}
+		.approval_itembtn {
+			margin-top: 0;
+		}
+		.approval_itembtn button {
+			font-size: 16px;
+		}
+		.mui-media-body{
+			font-size: 13px;
+		}
+		.mui-media-body p{
+			font-size: 12px;
+		}
+		.mui-btn-block{
+			padding: 0;
+			height: 2rem !important;
+		}
+	</style>
+
+	<title></title>
+</head>
+<body>
+<div class="approvalItemVue" v-if="showApproval">
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">我的审批</h1>
+	</header>
+	<div class="mui-content approval_itembox">
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left" src="http://placehold.it/40x30">
+					<div class="mui-media-body">
+						{{approvalList.title}}
+						<p class="mui-ellipsis">{{approvalList.check_val}}</p>
+					</div>
+				</a>
+			</li>
+		</ul>
+		<form class="mui-input-group item">
+			<div class="mui-input-row textareaDiv">
+				<label>申报内容</label>
+				<textarea type="text" class="mui-input-clear textarea edit" :disabled="contentShow">{{approvalList.content}}</textarea>
+			</div>
+			<div class="mui-input-row">
+				<label>申报时间</label>
+				<input type="text" class="mui-input-clear" v-model="approvalList.create_time" disabled="disabled">
+			</div>
+			<div class="mui-input-row">
+				<label>申报状态</label>
+				<input type="text" class="mui-input-clear" v-model="approvalList.check_val" disabled="disabled">
+			</div>
+			<div class="mui-input-row" style="height: auto !important;" v-if="!data3.editbtnshow">
+				<ul class="mui-table-view approval_uploadbox">
+					<li class="mui-table-view-cell" v-for="findex in approvalList.file">
+						<a class="mui-navigate-right" :href="findex.file_path">{{findex.name}}</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view approval_uploadbox">
+					<li class="mui-table-view-cell" v-for="iindex in approvalList.img" style="padding: 11px 15px 4px 15px;">
+						<img class="mui-navigate-right" :src='iindex.file_path' width='60' height="60">
+						<span class="mui-navigate-right" style="position: relative;top: -2px;">{{iindex.name}}</span>
+					</li>
+				</ul>
+			</div>
+
+			<div style="padding: 10px;" v-if="data3.editbtnshow">
+				<div class="camerabox">
+					<label for="headImage" style="width: 50%;">
+						<img src="" alt="" id="headImg">
+					</label>
+					<input type="file" name="img" id="headImage" @change="justchange">
+				</div>
+				<div class="filebox">
+					<label for="headfile" class="filelabel" style="width: 100%;text-align: center;font-size: 12px;">
+						上传附件
+					</label>
+					<input type="file" id="headfile" @change="justchangefile">
+				</div>
+			</div>
+
+			<div class="mui-input-row"></div>
+			<div class="mui-input-row">
+				<label style="font-size: 13px;color: #000;">关联项目</label>
+			</div>
+			<div v-for="pro in projectList">
+				<div class="mui-input-row">
+					<label>项目名称</label>
+					<input type="text" class="mui-input-clear" v-model="pro.project_name" disabled="disabled">
+				</div>
+				<div class="mui-input-row" v-for="index in pro.user">
+					<label>{{index.title}}</label>
+					<input type="text" class="mui-input-clear" v-model="index.realname" disabled="disabled">
+				</div>
+				<div class="mui-input-row">
+					<label>公司名称</label>
+					<input type="text" class="mui-input-clear" v-model="pro.company" disabled="disabled">
+				</div>
+				<div class="mui-input-row">
+					<label>项目周期</label>
+					<input type="text" class="mui-input-clear" v-model="pro.starttime+'~'+pro.endtime" disabled="disabled">
+				</div>
+				<div class="mui-input-row">
+					<label>总监审批意见</label>
+					<input type="text" class="mui-input-clear" v-model="pro.starttime+'~'+pro.endtime" disabled="disabled">
+				</div>
+				<div class="mui-input-row">
+					<label>负责人审批意见</label>
+					<input type="text" class="mui-input-clear" v-model="pro.starttime+'~'+pro.endtime" disabled="disabled">
+				</div>
+
+				<!-- <div class="mui-input-row" style="height: auto !important;">
+                    <ul class="mui-table-view approval_uploadbox">
+                        <li class="mui-table-view-cell" v-for="findex in pro.file">
+                            <a class="mui-navigate-right" :href="findex.file_path">{{findex.name}}</a>
+                        </li>
+                    </ul>
+                    <ul class="mui-table-view approval_uploadbox">
+                        <li class="mui-table-view-cell" v-for="iindex in pro.img" style="padding: 11px 15px 4px 15px;">
+                            <img class="mui-navigate-right" :src='iindex.file_path' width='60' height="60">
+                            <span class="mui-navigate-right" style="position: relative;top: -2px;">{{iindex.name}}</span>
+                        </li>
+                    </ul>
+                </div> -->
+
+			</div>
+
+		</form>
+
+
+
+		<div class="approval_itembtn" v-if="data3.btnshow" style="margin: 25px 0 30px 0;">
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block approval_itembtn_left" @click="check(3)">驳回审批</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" @click="check(2)">审批通过</button>
+		</div>
+		<div class="" v-if="data3.editbtnshow" style="margin: 25px 0 30px 0;">
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" @click="reedit()">重新提交</button>
+		</div>
+	</div>
+
+</div>
+
+<script src="../../../js/mui.js"></script>
+<script src="../../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	mui.init({
+		beforeback: function() {
+
+			var list = plus.webview.currentWebview().opener();
+			//refresh是A页面自定义事件
+			mui.fire(list, 'refresh');
+			//返回true,继续页面关闭逻辑
+			return true;
+		}
+	});
+	mui.plusReady(function() {
+		var self = plus.webview.currentWebview();//获取当前窗体对象
+		var eid=self.eid;//接收A页面传入的id参数值
+		var vm = new Vue({
+			el: '.approvalItemVue',
+			data() {
+				return {
+					approvalList: [],
+					data3: [],
+					projectList: [],
+					imgid: '',
+					fileid: '',
+					showApproval: false,
+					contentShow: true
+				}
+			},
+			components: {},
+			props: {},
+			computed: {},
+			mounted() {
+				var _this = this;
+				$.ajax({
+					url: globalUrl + 'admin/record/applydetail',
+					type: 'post',
+					dataType: 'json',
+					headers: { //设置http头参数
+						"authKey": authKey,
+						"sessionId": sessionId
+					},
+					data: {
+						"eid":eid
+					},
+					success(res) {
+						if (res.code == '200') {
+							_this.approvalList=res.info
+							_this.data3=res
+							_this.projectList=res.project
+							_this.showApproval=true//显示页面
+							if(_this.data3.editbtnshow){//显示重新提交按钮时
+								_this.contentShow=false
+							}
+
+						} else {
+							console.log(res.error);
+						}
+					},
+					error(err) {
+						mui.toast('网络请求失败，请重试');
+					}
+				});
+
+			},
+			methods: {
+				check(num){//驳回和通过审批
+					var textarea=$('.textarea');
+					var _this = this;
+					$.ajax({
+						url: globalUrl + 'admin/record/applybtn',
+						type: 'post',
+						dataType: 'json',
+						headers: { //设置http头参数
+							"authKey": authKey,
+							"sessionId": sessionId
+						},
+						data: {
+							"eid":eid,
+							"pass": num,
+							"content": textarea.val()
+						},
+						success(res) {
+							mui.toast(res.error);
+							mui.back();
+						},
+						error(err) {
+							mui.toast('网络请求失败，请重试');
+						}
+					});
+
+				},
+				reedit(){//重新提交
+					var textarea=$('.textarea');
+					var _this = this;
+					var btnArray = ['否', '是'];
+					if(_this.imgid==''||_this.fileid==''){//没有上传图片和文件
+						mui.toast('请上传图片或文件');
+						return false
+					}
+					mui.confirm('只有一次重新提交机会,是否继续？', '提示', btnArray, function(e) {
+						if (e.index == 1) { //1是确定
+							$.ajax({
+								url: globalUrl + 'admin/record/applybtn1',
+								type: 'post',
+								dataType: 'json',
+								headers: { //设置http头参数
+									"authKey": authKey,
+									"sessionId": sessionId
+								},
+								data: {
+									"eid":eid,
+									"content": textarea.val(),
+									"fid": _this.imgid + ',' + _this.fileid
+								},
+								success(res) {
+									mui.toast(res.error);
+									if(res.code==200){//成功跳转
+										setTimeout(function() {
+											mui.openWindow({
+												url: 'approval.html'
+											});
+										}, 500)
+									}
+
+								},
+								error(err) {
+									mui.toast('网络请求失败，请重试');
+								}
+							});
+						} else{
+							mui.toast('您取消了操作');
+						}
+
+					})
+
+
+
+
+				},
+				justchange() {
+					var _this = this
+					var fileObj = document.getElementById("headImage").files[0]; // js 获取文件对象
+					if (fileObj.type == 'image/jpeg' || fileObj.type == 'image/png') { //只能上传jpg和png格式
+						if (typeof(fileObj) == "undefined" || fileObj.size <= 0) {
+							alert("请选择文件，且文件不能为空");
+							return false;
+						}
+						if (fileObj.size >= 104857600) {
+							alert("请上传小于100M的文件！");
+							return false;
+						}
+						var formFile = new FormData();
+						// formFile.append("action", "UploadVMKImagePath");
+						formFile.append("file", fileObj); //加入文件对象
+						formFile.append("uid", "1"); //加入文件对象
+						formFile.append("filetype", "img"); //是图片值为img
+						// formFile.append("filetype", "file"); //是文件值为file,上传哪种要通过fileObj.type判断
+						formFile.append("name", "img"); //加入文件对象
+						formFile.append("module", "crm_contacts"); //加入文件对象
+						formFile.append("module_id", "1"); //加入文件对象
+						var data = formFile;
+						// for (var key of formFile.entries()) {//返回接口的全部参数
+						// 	console.log(key[0] + ', ' + key[1]);
+						// }
+						$.ajax({
+							url: globalUrl + 'admin/base/imgup1',
+							type: 'post',
+							dataType: 'json',
+							data: data,
+							cache: false,
+							processData: false, //参数进行序列化处理
+							contentType: false, //必须
+							success(res) {
+								if (res.state == 1) { //code为0失败,1成功
+									// file_idBox += res.file_id + ',' //图片上传id字符串'12,13,14'
+									_this.imgid= res.file_id
+									$('#headImg').attr('src', res.path);
+									$('.camerabox label').css('background', 'none');
+								} else {
+									mui.toast(res.path);
+								}
+							},
+							error(err) {
+								mui.toast('网络请求失败，请重试');
+							}
+						});
+					} else {
+						mui.toast('上传格式不正确，请重试');
+					}
+				},
+
+				justchangefile() {
+					var _this = this
+					var fileObj = document.getElementById("headfile").files[0]; // js 获取文件对象
+					//application/msword text/plain application/vnd.ms-excel application/x-zip-compressed
+					if (fileObj.type == 'application/msword' || fileObj.type == 'text/plain' ||
+							fileObj.type == 'application/vnd.ms-excel' ||
+							fileObj.type == 'application/x-zip-compressed' || fileObj.type == '') { //只能上传jpg和png格式
+						if (typeof(fileObj) == "undefined" || fileObj.size <= 0) {
+							alert("请选择文件，且文件不能为空");
+							return false;
+						}
+						if (fileObj.size >= 104857600) {
+							alert("请上传小于100M的文件！");
+							return false;
+						}
+						var formFile = new FormData();
+						// formFile.append("action", "UploadVMKImagePath");
+						formFile.append("file", fileObj); //加入文件对象
+						formFile.append("uid", "1"); //加入文件对象
+						// formFile.append("filetype", "img"); //是图片值为img
+						formFile.append("filetype", "file"); //是文件值为file,上传哪种要通过fileObj.type判断
+						formFile.append("name", "img"); //加入文件对象
+						formFile.append("module", "crm_contacts"); //加入文件对象
+						formFile.append("module_id", "1"); //加入文件对象
+						var data = formFile;
+						// for (var key of formFile.entries()) {//返回接口的全部参数
+						// 	console.log(key[0] + ', ' + key[1]);
+						// }
+						$.ajax({
+							url: globalUrl + 'admin/base/imgup1',
+							type: 'post',
+							dataType: 'json',
+							data: data,
+							cache: false,
+							processData: false, //参数进行序列化处理
+							contentType: false, //必须
+							success(res) {
+								if (res.state == 1) { //code为0失败,1成功
+									// file_idBox += res.file_id + ',' //图片上传id字符串'12,13,14'
+									_this.fileid= res.file_id
+									$('.filelabel').text(fileObj.name);
+									mui.back();
+								} else {
+									mui.toast(res.path);
+								}
+							},
+							error(err) {
+								mui.toast('网络请求失败，请重试');
+							}
+						});
+					} else {
+						mui.toast('上传格式不正确，请重试');
+					}
+				}
+
+
+
+			}
+		});
+	})
+
+</script>
+
+
+</body>
+</html>

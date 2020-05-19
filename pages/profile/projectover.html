@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="../home/css/menu/emergency/just.css" />
+		<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css" />
+
+		<script src="../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../layui/layui.all.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<title></title>
+	</head>
+	<body>
+		<div id="projectover">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff;"></a>
+				<h1 class="mui-title">项目结项申请</h1>
+			</header>
+			<div class="mui-content just-box">
+				<ul class="mui-table-view just-ul">
+					<li class="mui-table-view-cell just-li">
+						<label>项目名称：</label>
+						<input type="text" oncellchange="projectname" disabled="disabled" v-model="dataprojectover.project_name" />
+					</li>
+					<li class="mui-table-view-cell just-li" v-for="item in dataprojectover.user">
+						<label>{{item.title}}:</label>
+						<input type="text" disabled="disabled" v-model="item.realname" />
+					</li>
+					<li class="mui-table-view-cell just-li">
+						<label>公司名称：</label>
+						<input type="text" disabled="disabled" v-model="dataprojectover.company" />
+					</li>
+					<li class="mui-table-view-cell just-li">
+						<label style="width: 40%;">项目周期：</label>
+						<div class="layui-input-inline">
+							<input style="width: 100%;" type="text" class="layui-input" id="start" placeholder="yyyy-MM-dd">
+						</div>至
+						<div class="layui-input-inline">
+							<input style="width: 100%;" type="text" class="layui-input" id="end" placeholder="yyyy-MM-dd">
+						</div>
+					</li>
+					<li class="mui-table-view-cell just-li">
+						<label>结束时间：</label>
+						<div class="layui-input-inline">
+							<input style="width: 100%;" type="text" class="layui-input overtime" id="over" placeholder="yyyy-MM-dd">
+						</div>
+					</li>
+					<div class="mui-input-row" style="height: auto;">
+						<div class="miaosu">描述内容: </div>
+						<textarea class="justcontent" type="text" placeholder="简单描述一下吧"></textarea>
+					</div>
+				</ul>
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block everyday_btn" @click="overbtn">提交</button>
+			</div>
+		</div>
+
+
+		<script>
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview(); //获取当前窗体对象
+				var bid = self.bid; //接收A页面传入的id参数值
+				new Vue({
+					el: '#projectover',
+					data() {
+						return {
+							dataprojectover: []
+						}
+					},
+					mounted() {
+						var _this = this;
+						var detileBid = bid; //项目id
+						$.ajax({
+							url: globalUrl + 'admin/record/projectinfo',
+							type: 'post',
+							dataType: 'json',
+							headers: { //设置http头参数
+								"authKey": authKey,
+								"sessionId": sessionId
+							},
+							data: {
+								"bid": detileBid //项目id
+							},
+							success(res) {
+								if (res.code == '200') {
+									if (res.data.bid > 0) {
+										_this.dataprojectover = res.data;
+									} else {
+										_this.dataprojectover = []
+										_this.dataprojectover.starttime = ''
+										_this.dataprojectover.endtime = ''
+										mui.toast('暂无数据');
+									}
+								} else {
+									mui.toast(res.error);
+								}
+							},
+							error(err) {
+								mui.toast('网络请求失败，请重试');
+							}
+						});
+					},
+					methods: {
+						overbtn() {
+							var _this = this;
+							var justcontent = $('.justcontent').val();
+							var overtime = $('.overtime').val();
+							var projectname = $('.projectname').val()
+							$.ajax({
+								url: globalUrl + 'admin/record/finshapply',
+								type: 'post',
+								dataType: 'json',
+								headers: { //设置http头参数
+									"authKey": authKey,
+									"sessionId": sessionId
+								},
+								data: {
+									"bid": bid,
+									"projectname": projectname,
+									"finshtime": overtime,
+									"remark": justcontent
+								},
+								success(res) {
+									if (res.code == 200) {
+										mui.toast(res.error);
+										mui.back();
+									} else {
+										mui.toast(res.error);
+									}
+								},
+								error(err) {
+									mui.toast('网络请求失败，请重试');
+								}
+							});
+						}
+					}
+				});
+				layui.use('laydate', function() {
+					var laydate = layui.laydate;
+
+					//常规用法
+					laydate.render({
+						elem: '#start'
+					});
+					laydate.render({
+						elem: '#end'
+					});
+					laydate.render({
+						elem: '#over'
+					});
+				})
+			})
+		</script>
+	</body>
+</html>

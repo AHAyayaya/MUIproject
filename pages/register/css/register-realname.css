@@ -1,0 +1,26 @@
+body{
+	background-color: #FFFFFF;
+}
+.choose_box{
+	padding: 4%;
+	margin-top: 10%;
+	background-color: #FFFFFF;
+}
+.choose_box .mui-btn-block{
+  width: 45% !important;
+  height: 3.5rem;
+  margin-top: 15%;
+  margin-left: 27%;
+  background-color: #1dade5;
+	border-radius: 9px;
+  border: none;
+
+  box-shadow: 0px 5px 4px 0px #b2b2b2;
+}
+.btn_bottom{
+	position: absolute;
+	bottom: 1%;
+}
+.background_color{
+    background-color: #007aff !important;
+}

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../../../../css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/menu/emergency/just.css" />
+
+		<script src="../../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<title></title>
+	</head>
+	<body>
+		<div id="node" class="commonclass">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title">节点上报</h1>
+			</header>
+			<div class="mui-content just-box">
+				<ul class="mui-table-view just-ul">
+					<li class="mui-table-view-cell just-li">
+						<label>项目名称：</label>
+						<input type="text" disabled="disabled" v-model="datanode.project_name" />
+					</li>
+					<li class="mui-table-view-cell just-li" v-for="item in datanode.user">
+						<label>{{item.title}}:</label>
+						<input type="text" disabled="disabled" v-model="item.realname" />
+					</li>
+					<li class="mui-table-view-cell just-li">
+						<label>公司名称：</label>
+						<input type="text" disabled="disabled" v-model="datanode.company" />
+					</li>
+					<li class="mui-table-view-cell just-li">
+						<label>项目进度：</label>
+						<label style="font-size: 12px;display: flex;width: 70%;">
+							已完成当前项目的<input class="nodejindu" type="text" style="width: 20%;padding: 2%;border: 1px solid #EEEEEE;" /> %
+						</label>
+					</li>
+					<li class="mui-table-view-cell just-li">
+						<label>目前节点：</label>
+						<input class="nodejiedian" style="font-size: 12px ;" type="text" placeholder="请输入当前节点进度" />
+					</li>
+					<div class="mui-input-row" style="height: auto;">
+						<div class="miaosu">描述内容: </div>
+						<textarea class="justcontent" type="text" placeholder="简单描述一下吧"></textarea>
+						<div class="camerabox">
+							<label for="headImage">
+								<img src="" alt="" id="headImg">
+							</label>
+							<span>拍个照片吧</span>
+							<input type="file" name="img" id="headImage" @change="justchange">
+						</div>
+
+					</div>
+				</ul>
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block everyday_btn" @click="justbtn">提交</button>
+			</div>
+		</div>
+		<script type="text/javascript">
+			mui.init({
+				beforeback: function() {
+					var list = plus.webview.getWebviewById('mynode.html');
+					//触发列表界面的自定义事件（refresh）,从而进行数据刷新   
+					mui.fire(list, 'refresh');
+					//返回true，继续页面关闭逻辑   
+					return true;
+				}
+			});
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview(); //获取当前窗体对象
+				var bid = self.bid; //接收A页面传入的id参数值
+				var file_idBox = ''; //zizhi的参数,图片上传id字符串'12,13,14'
+
+				new Vue({
+					el: '#node',
+					data() {
+						return {
+							datanode: []
+						}
+					},
+					mounted() {
+						var _this = this;
+						$.ajax({
+							url: globalUrl + 'admin/record/projectinfo',
+							type: 'post',
+							dataType: 'json',
+							headers: { //设置http头参数
+								"authKey": authKey,
+								"sessionId": sessionId
+							},
+							data: {
+								"bid": bid
+							},
+							success(res) {
+								if (res.code == 200) {
+									_this.datanode = res.data
+								} else {
+									mui.toast('网络请求失败，请刷新重试');
+								}
+							},
+							error(err) {
+								mui.toast('网络请求失败，请重试');
+							}
+						});
+					},
+					methods: {
+						justbtn() {
+							var _this = this;
+							var nodejiedian = $('.nodejiedian').val();
+							var justcontent = $('.justcontent').val();
+							var nodejindu = $('.nodejindu').val();
+							if (nodejindu == '') {
+								mui.toast('请输入项目进度')
+								return false
+							} else {
+								var nodeReg = /\w/;
+								if (!(nodeReg.test(nodejindu))|| nodejindu<=0 || nodejindu>100) {
+									mui.toast('请输入正确的进度');
+									return false;
+								}
+							}
+							if (nodejiedian == '') {
+								mui.toast('请输入项目节点')
+								return false
+							} else {
+								var jiedianReg = /^[\u4e00-\u9fa5]+$/;
+								if (!(jiedianReg.test(nodejiedian))){
+									mui.toast('请输入正确的节点')
+								}
+							}
+							
+							$.ajax({
+								url: globalUrl + 'admin/record/logadd',
+								type: 'post',
+								dataType: 'json',
+								headers: { //设置http头参数
+									"authKey": authKey,
+									"sessionId": sessionId
+								},
+								data: {
+									"bid": bid,
+									"fid": file_idBox,
+									"type": 2,
+									"content": justcontent,
+									"jiedian": nodejiedian,
+									"jindu": nodejindu,
+									"addr": ""
+								},
+								success(res) {
+									
+									if (res.code == 1) {
+										mui.toast(res.error);
+										mui.back();
+										// setTimeout(function() {
+										// 	//跳转传参
+										// 	mui.openWindow({
+										// 		url: 'mynode.html',
+										// 		extras: {
+										// 			bid: bid //自定义扩展参数，可以用来处理页面间传值  
+										// 		}
+										// 	});
+										// }, 500);
+									} else {
+										mui.toast(res.error);
+										return false
+									}
+
+								},
+								error(err) {
+									mui.toast('网络请求失败，请重试');
+								}
+							});
+
+						},
+						justchange() {
+
+							var fileObj = document.getElementById("headImage").files[0]; // js 获取文件对象
+							if (fileObj.type == 'image/jpeg' || fileObj.type == 'image/png') { //只能上传jpg和png格式
+								if (typeof(fileObj) == "undefined" || fileObj.size <= 0) {
+									alert("请选择文件，且文件不能为空");
+									return false;
+								}
+								if (fileObj.size >= 104857600) {
+									alert("请上传小于100M的文件！");
+									return false;
+								}
+								var formFile = new FormData();
+								formFile.append("file", fileObj); //加入文件对象
+								formFile.append("uid", "1"); //加入文件对象
+								formFile.append("filetype", "img"); //是图片值为img
+								// formFile.append("filetype", "file"); //是文件值为file,上传哪种要通过fileObj.type判断
+								formFile.append("name", "img"); //加入文件对象
+								formFile.append("module", "crm_contacts"); //加入文件对象
+								formFile.append("module_id", "1"); //加入文件对象
+								var data = formFile;
+								$.ajax({
+									url: globalUrl + 'admin/base/imgup1',
+									type: 'post',
+									dataType: 'json',
+									data: data,
+									cache: false,
+									processData: false, //参数进行序列化处理
+									contentType: false, //必须
+									success(res) {
+										if (res.state == 1) { //code为0失败,1成功
+											file_idBox += res.file_id + ',' //图片上传id字符串'12,13,14'
+											$('#headImg').attr('src', res.path);
+											$('.camerabox label').css('background', 'none');
+										} else {
+											mui.toast(res.path);
+										}
+									},
+									error(err) {
+										mui.toast('网络请求失败，请重试');
+									}
+								});
+							} else {
+								mui.toast('上传格式不正确，请重试');
+							}
+						}
+					}
+				})
+			})
+		</script>
+	</body>
+</html>

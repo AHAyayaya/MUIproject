@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="css/profile.css" />
+		<!-- <link rel="stylesheet" type="text/css" href="../home/menu/assess/approval_score/css/element-ui.css"/> -->
+
+		<script src="../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <script src="../home/js/element-ui.js"></script> -->
+		<style type="text/css">
+			.user_box img {
+			    width: 100%;
+			    border-radius: 50%;
+			}
+		</style>
+		<title></title>
+	</head>
+	<body>
+		<div class="profileVue mui-content user-content">
+			<!--用户头像开始-->
+			<div class="user_info">
+				<ul class="mui-table-view mui-grid-view user_box" style="text-align: center;">
+					<li class="mui-table-view-cell" style="padding: 0;">
+						<!-- 放大图片 -->
+						<!-- <div class="demo-image__preview">
+						  <el-image
+						    style="width: 100px; height: 100px"
+						    :src="srcList[0]"
+						    :preview-src-list="srcList">
+						  </el-image>
+						</div> -->
+						<img class="mui-media-object" :src="profileList.thumb_img" style="width: 100px;height: 100px;">
+						<div class="mui-media-body">{{profileList.realname}}</div>
+						<div class="mui-media-body">{{profileList.post}}</div>
+					</li>
+				</ul>
+			</div>
+			
+			
+			<!--用户头像结束-->
+			<!--用户信息开始-->
+			<div class="user_config">
+				<ul class="mui-table-view profile_box">
+					<li class="mui-table-view-cell user_config_li">
+						<a class="mui-navigate-right">
+							<img class="mui-media-object mui-pull-left profile_icon" src="../../assets/images/profile/profile_data.png">
+							<span>个人资料</span>
+						</a>
+					</li>
+					<!-- <li class="mui-table-view-cell user_config_li">
+						<a class="mui-navigate-right">
+							<img class="mui-media-object mui-pull-left profile_icon" src="../../assets/images/profile/profile_attestation.png">
+							<span>实名认证</span>
+						</a>
+					</li> -->
+					<li class="mui-table-view-cell user_config_li">
+						<a class="mui-navigate-right">
+							<img class="mui-media-object mui-pull-left profile_icon" src="../../assets/images/profile/profile_duty.png">
+							<span>我的审批</span>
+						</a>
+					</li>
+					<!-- <li class="mui-table-view-cell user_config_li">
+						<a class="mui-navigate-right">
+							<img class="mui-media-object mui-pull-left profile_icon" src="../../assets/images/profile/profile_duty.png">
+							<span>我的申报</span>
+						</a>
+					</li> -->
+					<li class="mui-table-view-cell user_config_li">
+						<a class="mui-navigate-right">
+							<img class="mui-media-object mui-pull-left profile_icon" src="../../assets/images/profile/profile_duty.png">
+							<span>现负责项目</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell user_config_li">
+						<a class="mui-navigate-right">
+							<img class="mui-media-object mui-pull-left profile_icon" src="../../assets/images/profile/profile_completed.png">
+							<span>已完成的项目</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell user_config_li">
+						<a class="mui-navigate-right">
+							<img class="mui-media-object mui-pull-left profile_icon" src="../../assets/images/profile/profile_system.png">
+							<span>系统设置</span>
+						</a>
+					</li>
+				</ul>
+
+			</div>
+			<!--用户信息结束-->
+		</div>
+
+
+		<script type="text/javascript">
+			console.log(11111)
+			
+			window.addEventListener('refresh', function(e) { //执行刷新
+				location.reload();
+			});
+
+			var vm = new Vue({
+				el: '.profileVue',
+				data() {
+					return {
+						profileList: [],
+						// srcList: [],
+						
+					}
+				},
+				components: {},
+				props: {},
+				computed: {},
+				mounted() {
+					var _this = this;
+					$.ajax({
+						url: globalUrl + 'admin/users/info',
+						type: 'post',
+						dataType: 'json',
+						headers: { //设置http头参数
+							"authKey": authKey,
+							"sessionId": sessionId
+						},
+						data: {},
+						success(res) {
+							if (res.code == '200') {
+								if (res.data.id > 0) { //有数据
+									_this.profileList = res.data
+									// _this.srcList.push(res.data.thumb_img)
+								} else { //无数据
+									mui.toast('获取用户信息失败');
+								}
+							} else {
+								console.log(res.error);
+							}
+						},
+						error(err) {
+							mui.toast('网络请求失败，请重试');
+						}
+					});
+
+				},
+				methods: {}
+			});
+		</script>
+		<script type="text/javascript">
+			mui.plusReady(function() {
+				var page = ["profiledata.html", "approval/approval.html", "nowproject/nowproject.html",
+					"completed/completed.html",
+					"system.html"
+				];
+				var arr = document.getElementsByClassName("user_config_li");
+				for (var i = 0; i < arr.length; i++) {
+					! function(i) {
+						arr[i].addEventListener("tap", function() {
+							mui.openWindow({
+								url: page[i],
+								id: page[i],
+							})
+						})
+					}(i);
+				}
+			})
+		</script>
+		<script type="text/javascript">
+			mui.init({
+				beforeback: function() {
+					return false;
+				},
+				//下拉刷新
+				pullRefresh : {
+					container:".profileVue",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+					down : {
+						style:'circle',//必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
+						color:'#2BD009', //可选，默认“#2BD009” 下拉刷新控件颜色
+						height:'50px',//可选,默认50px.下拉刷新控件的高度,
+						range:'100px', //可选 默认100px,控件可下拉拖拽的范围
+						offset:'0px', //可选 默认0px,下拉刷新控件的起始位置
+						auto: false,//可选,默认false.首次加载自动上拉刷新一次
+						callback: function() {//必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+							//业务逻辑代码，比如通过ajax从服务器获取新数据;
+							$.ajax({
+								url: globalUrl + 'admin/users/info',
+								type: 'post',
+								dataType: 'json',
+								headers: { //设置http头参数
+									"authKey": authKey,
+									"sessionId": sessionId
+								},
+								data: {},
+								success(res) {
+									if (res.code == '200') {
+										mui('.profileVue').pullRefresh().endPulldown();//关闭下拉刷新加载
+										mui.toast('刷新成功')
+										if (res.data.id > 0) { //有数据
+											vm.profileList = res.data
+										} else { //无数据
+											mui.toast('获取用户信息失败');
+										}
+									} else {
+										console.log(res.error);
+									}
+								},
+								error(err) {
+									mui.toast('网络请求失败，请重试');
+								}
+							});
+							//注意，加载完新数据后，必须执行如下代码，注意：若为ajax请求，则需将如下代码放置在处理完ajax响应数据之后
+							//没有更多内容了，endPulldown 传入true， 不再执行下拉刷新
+							
+						}
+					}
+				},
+				
+			  
+			});
+			
+		</script>
+	</body>
+</html>

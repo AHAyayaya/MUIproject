@@ -1,0 +1,76 @@
+.change_box{
+	margin-top: 13%;
+}
+.change_box form{
+	margin: 10%;
+}
+.mui-input-group:before ,.mui-input-group .mui-input-row:after,.mui-input-group:after{
+	background-color: #EEEEEE;
+	width: 100%;
+	left: 0;
+}
+.change_box div{
+	height: 5% !important;
+}
+.change_box .mui-input-row label{
+	width: 10%;
+	padding: 7px 0;
+}
+.change_box .mui-input-row label ~ input{
+	width: 83%;
+	margin-top: 5px;
+	font-size: 12px;
+}
+.change_box img{
+	width: 100%;
+}
+.sendcodebtn{
+  background-color: #fae1d7;
+  position: absolute;
+  top: 30%;
+  right: 11%;
+  height: 60%;
+  width: 25%;
+  padding: 0;
+  font-size: 12px;
+  border-radius: 7px;
+}
+#tip{
+  position: absolute;
+  display: flex;
+  top: 30%;
+  right: 10%;
+  font-size: 12px;
+}
+#tip img{
+	width: 1.5rem;
+  margin-top: -4%;
+}
+.change_btn{
+	margin-top: 30%;
+	display: table;
+	font-size: 1rem;
+	width: 60%;
+	height: 3rem;
+	border-radius: 2rem;
+	background: url(../../assets/images/changepwd/change_btn.png)no-repeat center;
+	position: relative;
+	left: 20%;
+	top: 0;
+	margin-bottom: 1rem;
+	border: none;
+}
+.small-font{
+	/*display: block;*/
+	font-size: 12px;
+	/*transform: scale(0.8);*/
+	color: #e2e2e2;  
+}
+.change_box_bottom{
+	position: absolute;
+  bottom: 15%;
+  left: 25%;
+}
+.change_box_bottom img{
+	width: 70%;
+}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="../../../css/mui.css" />
+	<link rel="stylesheet" type="text/css" href="../../home/css/menu/emergency/myproject.css" />
+	<link rel="stylesheet" type="text/css" href="../css/completed.css" />
+	<title></title>
+	<style type="text/css">
+		.project_box ul li {
+			margin-top: 5%;
+		}
+		.line {
+			background-color: #4f4f4f;
+		}
+		.finishimg {
+			left: 82%;
+		}
+	</style>
+</head>
+<body>
+<div class="completedVue">
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">我的项目</h1>
+	</header>
+	<div class="mui-content project_box">
+		<ul class="mui-table-view ul-top" v-if="show">
+			<li class="liClick mui-table-view-cell mui-media" style="background-color: #999999;"
+				v-for="item in completedList" :data-bid='item.bid'>
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left" :src="item.img[0].file_path">
+					<div class="mui-media-body mybox">
+						<div class="mybox-top">
+							<span>{{item.project_name}}</span>
+						</div>
+						<div class="line"></div>
+						<div class="mybox-bottom">
+							<div class="mybox-bottom-top">
+								<div>
+									<label>项目时间:</label><span>{{item.starttime}}至{{item.endtime}}</span>
+								</div>
+								<div>
+									<label>项目进度:</label><span>已完成{{item.jindu}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<script src="../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '.completedVue',
+		data() {
+			return {
+				completedList: [],
+				show: false
+			}
+		},
+		components: {},
+		props: {},
+		computed: {},
+		mounted() {
+			var _this = this;
+			$.ajax({
+				url: globalUrl + 'admin/record/projectlist',
+				type: 'post',
+				dataType: 'json',
+				headers: { //设置http头参数
+					"authKey": authKey,
+					"sessionId": sessionId
+				},
+				data: {
+					"is_finished": 0 //1完成,0未完成
+				},
+				success(res) {
+					if (res.code=='200') {
+						if (res.data.list.length>0) {//有数据
+							_this.completedList=res.data.list
+							_this.show=true
+						} else{//无数据
+							mui.toast('暂无数据');
+						}
+					} else{
+						console.log(res.error);
+					}
+				},
+				error(err) {
+					mui.toast('网络请求失败，请重试');
+				}
+			});
+
+		},
+		methods: {}
+	});
+	$(document).on('tap', '.liClick', function() {
+		var bid = $(this).data('bid');
+		setTimeout(function() {
+			//跳转传参
+			mui.openWindow({
+				url: '../project-detail.html',
+				extras: {
+					bid: bid //自定义扩展参数，可以用来处理页面间传值
+				}
+			});
+		}, 500);
+	})
+</script>
+</body>
+</html>

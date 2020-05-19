@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="css/register-phone.css" />
+		<script src="../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/jquery3.4.1.min.js"></script>
+		<script src="../../js/common2.js"></script>
+		<title></title>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">账户注册</h1>
+		</header>
+		<div class="mui-content">
+			<div class="step_box">
+				<div>
+					<img class="step_box_img mui-active" src="../../assets/images/register/register_phone_active.png" />
+					<span class="step_box_font">手机注册</span>
+				</div>
+				<div class="step_bt"></div>
+				<div>
+					<img class="step_box_img" src="../../assets/images/register/register_realname.png" />
+					<span class="step_box_font">实名认证</span>
+				</div>
+				<div class="step_bt"></div>
+
+				<div>
+					<img class="step_box_img" src="../../assets/images/register/register_finish.png" />
+					<span class="step_box_font">注册完成</span>
+				</div>
+			</div>
+			<!--步骤条结束-->
+			<!--用户信息开始-->
+			<form class="mui-input-group register_box">
+				<div class="mui-input-row register_box_main">
+					<label>手机号码</label>
+					<input type="text" class="mui-input-clear username" value="" placeholder="请输入手机号码">
+				</div>
+				<div class="mui-input-row register_box_main">
+					<label>验证码</label>
+					<input type="text" class="mui-input-clear codeInput" value="" placeholder="请输入验证码">
+					<button class="code" type="button">获取验证码</button>
+				</div>
+				<div class="mui-input-row register_box_main">
+					<label>邮箱</label>
+					<input type="email" class="mui-input-clear email" value="" placeholder="请输入您的邮箱">
+				</div>
+				<div class="mui-input-row register_box_main">
+					<label>登录密码</label>
+					<input type="password" value="" class="mui-input-clear password" placeholder="请输入6到20位密码">
+				</div>
+				<div class="mui-input-row register_box_main">
+					<label>确认密码</label>
+					<input type="password" value="" class="mui-input-clear confirmPassword" placeholder="请再次确认密码">
+				</div>
+			</form>
+			<!--用户信息结束-->
+			<!--协议开始-->
+			<div class="mui-input-row mui-left register_agreement mui-checkbox">
+				<label style="padding: 5px 0 0 5%;">
+					<input id="checkboxInput" type="radio">
+					注册即表示同意<span class="xieyi">《区管道路养护系统服务协议说明》</span>
+				</label>
+			</div>
+			<!--协议结束-->
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block register_btn nextStep">下一步</button>
+		</div>
+		<script>
+			var username = $('.username'),
+				email = $('.email'),
+				password = $('.password'),
+				confirmPassword = $('.confirmPassword'),
+				codeInput = $('.codeInput'),
+				code = $('.code');
+
+			username.on('blur', function() {
+				if ($(this).val() == '') {
+					mui.toast('请输入手机号!');
+					return false
+				} else {
+					var usernameValue = $.trim($('.username').val());
+					var usernameReg = /^1[3|4|5|6|7|8|9][0-9]{9}$/;
+					if (!(usernameReg.test(usernameValue))) {
+						mui.toast('手机号格式不正确!');
+						return false;
+					}
+				}
+			})
+			codeInput.on('blur', function() {
+				if ($(this).val() == '') {
+					mui.toast('请输入验证码!');
+					return false
+				}
+			})
+
+			function updatebutton(num) { //倒计时函数
+				var secs = 60 * 1;
+				if (num == secs) {
+					code.text("获取验证码").attr('disabled', false).css('background', '#fff');
+				} else {
+					printnr = secs - num;
+					code.text(printnr + "s").attr('disabled', true).css('background', '#e8e8e8');
+				}
+			}
+			code.on('tap', function() {
+				if (username.val() == '') {
+					mui.toast('请输入手机号!');
+					return false
+				} else {
+					$.ajax({
+						url: globalUrl + 'admin/base/sendCode',
+						type: 'post',
+						dataType: 'json',
+						data: {
+							"username": username.val()
+						},
+						success(res) {
+							if (res.code == '200') {
+								localStorage.setItem('smsCode', res.smsCode); //把验证码存储在浏览器中
+								mui.toast(res.error);
+								for (i = 1; i <= 60 * 1; i++) { //请求成功开启倒计时
+									var time = setTimeout("updatebutton(" + i + ")", i * 1000);
+								}
+							} else {
+								mui.toast(res.error);
+							}
+						},
+						error(err) {
+							mui.toast('网络请求失败，请重试');
+						}
+					});
+
+				}
+
+			})
+			email.on('blur', function() {
+				if ($(this).val() == '') {
+					mui.toast('请输入邮箱!');
+					return false
+				} else {
+					var emailValue = $.trim($('.email').val());
+					var emailReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+					if (!(emailReg.test(emailValue))) {
+						mui.toast('邮箱格式不正确!');
+						return false
+					}
+				}
+			})
+			password.on('blur', function() {
+				if ($(this).val() == '') {
+					mui.toast('请输入登录密码!');
+					return false
+				} else {
+					var passwordValue = $.trim($('.password').val());
+					var passwordReg = /^(\w){6,20}$/;
+					if (!(passwordReg.test(passwordValue))) {
+						mui.toast('密码格式不正确');
+						return false
+					}
+				}
+			})
+			confirmPassword.on('blur', function() {
+				if ($(this).val() == '') {
+					mui.toast('请输入确认密码!');
+					return false
+				} else {
+					var passwordValue = $.trim($('.password').val());
+					var confirmPasswordValue = $.trim($('.confirmPassword').val());
+					if (passwordValue != confirmPasswordValue) {
+						mui.toast('两次输入的密码不一致');
+						return false
+					}
+				}
+			})
+
+
+			$('.nextStep').on('tap', function() {
+				var usernameVal = $.trim($('.username').val()),
+					emailVal = $.trim($('.email').val()),
+					passwordVal = $.trim($('.password').val()),
+					confirmPasswordVal = $.trim($('.confirmPassword').val()),
+					codeVal = $.trim($('.codeInput').val());
+
+				//内容为空不给提交
+				if (usernameVal == '' || emailVal == '' || passwordVal == '' || confirmPasswordVal == '' || codeVal == '') {
+					mui.toast('请输入全部信息!');
+					return false
+				}
+				//未勾选checkbox不能提交
+				if (!document.getElementById("checkboxInput").checked) {
+					mui.toast('请核对信息,并勾选同意!');
+					return false;
+				}
+				var smsCodeVal = localStorage.getItem('smsCode'); //验证码缓存
+				if (codeVal != smsCodeVal) {
+					mui.toast('验证码信息有误');
+					return false;
+				}
+				$.ajax({
+					url: globalUrl + 'admin/base/register1',
+					type: 'post',
+					dataType: 'json',
+					data: {
+						"username": usernameVal,
+						"code": codeVal,
+						"email": emailVal,
+						"password": passwordVal,
+						"repassword": confirmPasswordVal
+					},
+					success(res) {
+						if (res.code == '200') {
+							mui.toast(res.error);
+							setTimeout(function() {
+								// location.href='register-realname.html?id='+res.id;
+								localStorage.setItem('registerId', res.id); //存储名字为registerId值为res.id
+								//跳转传参
+								mui.openWindow({
+									url: './register-realname.html?id=' + res.id, //通过URL传参
+									// id:''//String类型,要打开的界面的id
+								});
+							}, 1000);
+						} else {
+							mui.toast(res.error);
+						}
+					},
+					error(err) {
+						mui.toast('网络请求失败，请重试');
+						console.log(666)
+					}
+				});
+
+			})
+			$(document).on('tap', '.xieyi', function() {
+				setTimeout(function() {
+					mui.openWindow({
+						url: '../xieyi/fuwuxieyi.html'
+					});
+				}, 500)
+			})
+		</script>
+	</body>
+</html>

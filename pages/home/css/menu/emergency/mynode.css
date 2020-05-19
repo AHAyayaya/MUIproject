@@ -1,0 +1,100 @@
+html,
+body,
+.report_ul,
+.report_box {
+	height: 100%;
+}
+
+.add-btn {
+	color: #fff;
+	background-color: #1dade5;
+	border: none;
+}
+
+.mui-table-view:before,
+.mui-table-view-cell:after,
+.mui-table-view:after {
+	background: none;
+}
+
+.report_ul {
+	background-color: #f7f7f7;
+	width: 90%;
+	margin-left: 5%;
+	margin-top: 10% !important;
+}
+
+.report_li {
+	padding: 0;
+	height: 20%;
+	margin-top: 5%;
+}
+
+.report_box {
+	background-color: #f7f7f7;
+}
+
+.report_date {
+	height: 100%;
+	width: 20%;
+	background-color: #f7f7f7;
+	float: left;
+	display: flex;
+	padding-top: 10%;
+}
+
+.report_content {
+	float: left;
+	height: 100%;
+	width: 80%;
+	background-color: #FFFFFF;
+	padding: 3%;
+	padding-left: 0;
+}
+
+.report_content_img {
+	float: left;
+	margin-left: 5px;
+	width: 40%;
+	height: 75%;
+	border: 5px solid #EEEEEE;
+}
+
+.report_content_img img {
+	width: 100%;
+	height: 100%;
+}
+
+.report_content_text {
+	color: #999999;
+	padding: 3%;
+	padding-right: 0;
+	float: left;
+	width: 55%;
+	height: 75%;
+	overflow: hidden;
+	font-size: 12px;
+}
+
+.file,
+.file_check {
+	margin-top: 5px;
+}
+
+.file {
+	color: #999999;
+	font-size: 12px;
+	margin-left: 5px;
+	float: left;
+}
+
+.file_check {
+	float: right;
+	text-align: center;
+	margin-right: 10px;
+	background-color: #CCEBDA;
+	width: 30%;
+	border-radius: 5px;
+	font-size: 12px;
+	color: #56B67F;
+}

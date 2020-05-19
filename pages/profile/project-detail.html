@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="../../css/mui.css" />
+	<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css" />
+	<link rel="stylesheet" type="text/css" href="css/projectdata.css" />
+	<link rel="stylesheet" type="text/css" href="../home/css/project-progress.css" />
+	<link rel="stylesheet" type="text/css" href="../home/menu/assess/approval_score/css/element-ui.css" />
+
+	<script src="../../js/mui.js"></script>
+	<script src="../../js/jquery3.4.1.min.js"></script>
+	<script src="../../js/common.js"></script>
+	<script src="../../js/vue.min.js"></script>
+	<script src="../home/js/element-ui.js"></script>
+	<style type="text/css">
+		.dwon{
+			text-align: center;
+			height: 30px;
+			line-height: 30px;
+		}
+		.dwon>a{
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+		.imgUl{
+			height: 277px;
+			overflow: auto;
+		}
+		.projectdata_li{
+			border: 0;
+			width: 28%;
+			height: 25%;
+		}
+		.green{
+			background: #5FB878;
+			height: 10px;
+		}
+		.red{
+			background: #FE0000;
+			height: 10px;
+		}
+		.el-image-viewer__mask{
+			opacity: 0.9;
+		}
+		.projectdata_img span {
+		    background: rgba(206,206,206);
+		}
+	</style>
+
+	<title></title>
+</head>
+<body>
+<div class="vueBox">
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="window.history.go(-1);" style="color: #fff;"></a>
+		<h1 class="mui-title">项目详情</h1>
+	</header>
+	<div class="mui-content projectdata_box" v-if="showDetail">
+		<div class="projectdata_info">
+			<ul class="mui-table-view projectdata_ul" style="margin: 0;">
+				<li class="mui-table-view-cell projectdata_infoli">
+					<ul class="mui-table-view itemBox">
+						<li class="mui-table-view-cell mui-input-row datainfo_li">
+							<label>项目名称:</label>
+							<input type="text" v-model="dataList.project_name" disabled="diabled" />
+						</li>
+						<li class="mui-table-view-cell mui-input-row datainfo_li">
+							<label>项目时间:</label>
+							<input type="text" v-model="dataList.starttime+'~'+dataList.endtime" disabled="diabled" />
+						</li>
+						<li class="mui-table-view-cell mui-input-row datainfo_li" v-for="item in dataList.user">
+							<label>{{item.title}}:</label>
+							<input type="text" v-model="item.realname" disabled="disabled" />
+						</li>
+						<li class="mui-table-view-cell mui-input-row datainfo_li">
+							<label>公司名称:</label>
+							<input type="text" v-model="dataList.company" disabled="disabled" />
+						</li>
+						<li class="mui-table-view-cell mui-input-row datainfo_li">
+							<label>项目备注:</label>
+							<input type="text" v-model="dataList.content" disabled="disabled" />
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<!-- 判断长度是否存在,存在则显示 -->
+		<div class="projectdata_img" style="min-height: 100px;" v-if="dataList.img && dataList.img.length">
+			<span class="ml5" style="background: #fff;">项目资料</span>
+			<span class="fr mr5" style="background: #fff;">图片合计{{dataList.img.length}}张</span>
+			<ul class="mui-table-view projectdata_ul imgUl" style="display: inline-block;">
+				<li class="mui-table-view-cell fl projectdata_li" v-for="(item,index) in dataList.img">
+					<!-- 放大图片 -->
+					<div class="demo-image__preview">
+					  <el-image
+					    :src="item.file_path"
+					    :preview-src-list="[item.file_path]">
+					  </el-image>
+					</div>
+					<!-- <img :src="item.file_path" /> -->
+					<!-- <p style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;text-align: center;'>{{item.name}}</p> -->
+				</li>
+			</ul>
+		</div>
+		<div class="projectdata_info">
+			<ul class="mui-table-view projectdata_ul" style="margin: 0;">
+				<li class="mui-table-view-cell projectdata_infoli" v-for="(item,index) in dataList.file">
+					<ul class="mui-table-view" >
+						<li class="mui-table-view-cell mui-input-row datainfo_li">
+							<label>附件名称:</label>
+							<span type="text" disabled="disabled" style="position: relative;top: 11px;">
+								<!-- <a :href="item.file_path" :download="item.file_path">{{item.name}}</a> -->
+								<span @click='downSpan(item.file_path)' class="downSpan">{{item.name}}</span>
+							</span>
+						</li>
+						<li class="mui-table-view-cell mui-input-row datainfo_li">
+							<label>上传时间:</label>
+							<input type="text" v-model="item.create_time" disabled="disabled" />
+						</li>
+					</ul>
+				</li>
+				<li class="mui-table-view-cell mui-input-row datainfo_li">
+					<label>当前得分:</label>
+					<input type="text" v-model="dataList.score+'分'" disabled="disabled" />
+				</li>
+			</ul>
+		</div>
+		<div class="project_main" style="height: auto;margin-top: 0;">
+			<h4 class="fl" style="width: 50%"><b>项目进度</b></h4>
+			<div class="layui-progress project_progress" lay-showpercent="true">
+				<div class="layui-progress-bar project_progressbar" v-if="dataList.jindu_num>80" :lay-percent="dataList.jindu_num+'%'" :style="'width:'+dataList.jindu_num+'%'">
+					<span class="layui-progress-text" style="width: 100%;display: block;">{{dataList.jindu}}</span>
+				</div>
+				<div class="layui-progress-bar green" v-if="dataList.jindu_num<=80" :lay-percent="dataList.jindu_num+'%'" :style="'width:'+dataList.jindu_num+'%'">
+					<span class="layui-progress-text" style="width: 100%;display: block;">{{dataList.jindu}}</span>
+				</div>
+			</div>
+			<p>当前项目节点：{{dataList.jiedian}}</p>
+		</div>
+		<div class="project_main" style="height: auto;">
+			<h4 class="fl" style="width: 50%"><b>时间进度</b></h4>
+			<div class="layui-progress project_progress" lay-showpercent="true">
+				<div class="layui-progress-bar project_progressbar" v-if="dataList.time_jindu_num>80" :lay-percent="dataList.time_jindu_num+'%'" :style="'width:'+dataList.time_jindu_num+'%'">
+					<span class="layui-progress-text" style="width: 100%;display: block;">{{dataList.time_jindu}}</span>
+				</div>
+				<div class="layui-progress-bar green" v-if="dataList.time_jindu_num<=80" :lay-percent="dataList.time_jindu_num+'%'" :style="'width:'+dataList.time_jindu_num+'%'">
+					<span class="layui-progress-text" style="width: 100%;display: block;">{{dataList.time_jindu}}</span>
+				</div>
+			</div>
+			<p>当前项目已用时间：{{dataList.user_time}}</p>
+		</div>
+
+		<button type="button" v-if="(!dataList.is_finshed)&&userrule==3" class="mui-btn mui-btn-blue mui-btn-block everyday_btn">结项申请</button>
+	</div>
+
+</div>
+
+<script src="../../layui/layui.all.js"></script>
+<script type="text/javascript">
+	mui.plusReady(function() {
+		var self = plus.webview.currentWebview();//获取当前窗体对象
+		var bid=self.bid;//接收A页面传入的id参数值
+		var vm = new Vue({
+			el:'.vueBox',
+			data() {
+				return {
+					dataList: [],
+					userrule: '',
+					showDetail: false,
+					// srcList: [] 
+				}
+			},
+			components: {},
+			props: {},
+			computed: {},
+			mounted() {
+				var _this=this;
+				$.ajax({
+					url: globalUrl + 'admin/record/projectinfo',
+					type: 'post',
+					dataType: 'json',
+					headers: { //设置http头参数
+						"authKey": authKey,
+						"sessionId": sessionId
+					},
+					data: {
+						"bid": bid
+						//项目id
+					},
+					success(res) {
+						if (res.code == '200') {
+							if (res.data.bid>0) {
+								_this.dataList=res.data;
+								_this.showDetail=true
+								// _this.srcList.push(res.data.img)
+							} else{
+								_this.dataList=[]
+								_this.dataList.starttime=''
+								_this.dataList.endtime=''
+								mui.toast('暂无数据');
+							}
+						} else {
+							mui.toast(res.error);
+						}
+					},
+					error(err) {
+						mui.toast('网络请求失败，请重试');
+					}
+				});
+
+				$.ajax({//判断结项申请权限
+					url: globalUrl+'admin/record/userrule',
+					type:'post',
+					dataType:'json',
+					headers:{ //设置http头参数
+						"authKey": authKey,
+						"sessionId": sessionId
+					},
+					data:{},
+					success(res){
+						if (res.code=='200') {
+							_this.userrule=res.error//1项目总监 2现场监理 3项目经理 4管理员
+						}
+					},
+					error(err){
+						mui.toast('网络请求失败，请重试');
+					}
+				});
+
+			},
+			methods: {
+				downSpan(e){
+					window.open(e);
+				}
+			}
+		});
+
+	});
+	$(document).on('tap', '.everyday_btn', function() {
+		setTimeout(function() {
+			//跳转传参
+			mui.openWindow({
+				url: 'projectover.html',
+				// extras: {
+				// 	bid: bid //自定义扩展参数，可以用来处理页面间传值
+				// }
+			});
+		}, 500);
+	});
+</script>
+
+</body>
+</html>

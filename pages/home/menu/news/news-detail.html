@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../../../css/mui.css"/>
+		<link rel="stylesheet" type="text/css" href="css/news-detail.css"/>
+		
+		<script src="../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../js/jquery3.4.1.min.js"></script>
+		<script src="../../../../js/common.js"></script>	
+		<script src="../../../../js/vue.min.js"></script>
+		<title></title>
+	</head>
+	<body>
+		<div id="newsdetail">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title">新闻详情</h1>
+			</header>
+			<div class="mui-content newsdetailbox">
+				<div class="newsdetailtop">
+					<h3>{{datanewsdetail.title}}</h3>
+					<p>{{datanewsdetail.addtime}}</p>
+				</div>
+				<div class="newsdetailmain">
+					<span>{{datanewsdetail.content}}</span>
+				</div>
+				<div class="newsdetailimg">
+					<img :src="datanewsdetail.file_path" >
+				</div>
+			</div>
+			
+		</div>
+		
+		<script type="text/javascript">
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview(); //获取当前窗体对象
+				var nid = self.nid; //接收A页面传入的id参数值
+			new Vue({
+				el:'#newsdetail',
+				data() {
+				  return {
+				    datanewsdetail: []
+				  }
+				},
+				mounted() {
+					var _this = this;
+					var cid = 
+					$.ajax({
+						url: globalUrl + 'admin/record/detailnews',
+						type: 'post',
+						dataType: 'json',
+						headers: { //设置http头参数
+							"authKey": authKey,
+							"sessionId": sessionId
+						},
+						data: {
+							"id": nid
+						},
+						success(res) {
+							if (res.status == 1) {
+									_this.datanewsdetail=res.data
+							} else {
+								mui.toast(res.error);
+							}
+						},
+						error(err) {
+							mui.toast('网络请求失败，请重试');
+						}
+					});
+				}
+			})
+		})
+		</script>
+	</body>
+</html>

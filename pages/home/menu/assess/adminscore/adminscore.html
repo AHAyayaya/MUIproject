@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="../../../../../css/mui.css" />
+	<link rel="stylesheet" type="text/css" href="css/adminscore.css" />
+	<link rel="stylesheet" type="text/css" href="../approval_score/css/element-ui.css"/>
+	<!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+	<title></title>
+	<style type="text/css">
+		.el-slider__input{
+			width: 110px;
+			margin-top: 6px;
+		}
+		.deduction{
+			margin-top: 0;
+		}
+
+		.el-slider__button-wrapper{
+			top: -12px;
+		}
+		.el-slider__button{
+			width: 25px;
+			height: 25px;
+		}
+		.el-slider__bar{
+			height: 15px;
+		}
+		.el-slider__runway{
+			height: 15px;
+		}
+		.mui-table-view{
+			margin-top: 0 !important;
+		}
+		.adminUl:after{
+			background-color: #fff !important;
+		}
+		.adminUl>li{
+			padding: 10px;
+		}
+		.adminUl>li ul>li{
+			padding: 8px 5px 10px 3px;
+		}
+		.el-slider__runway.show-input {
+			margin-right: 145px;
+			position: relative;
+			left: 4%;
+		}
+		.deduction {
+			box-shadow: #e8e8e8 0px 1px 5px;
+			border: 1px solid #e8e8e8;
+		}
+		.checkboxUl{
+			list-style: none;
+			padding: 0 10px 10px 13px;
+			margin: 0;
+			background: #fff;
+		}
+		.checkboxUl li label{
+			color: #1dade5;
+			font-size: 12px;
+		}
+
+
+		.checkbox{
+			cursor: pointer;
+			position: relative;
+			top: 1px;
+			width: 12px;
+			height: 12px;
+			font-size: 14px;
+		}
+		.checkbox::after{
+			position: absolute;
+			top: -3px;
+			left: -1px;
+			background-color: #fff;
+			color: #000;
+			width: 12px;
+			height: 12px;
+			display: inline-block;
+			visibility: visible;
+			padding-left: 0px;
+			text-align: center;
+			content: ' ';
+			border-radius: 3px;
+			border: 1px solid #ccc;
+		}
+		.checkbox:checked::after{
+			content: "✓";
+			font-size: 12px;
+			font-weight: bold;
+		}
+		.cardClass{
+			background: #fff;
+			padding-bottom: 10px;
+		}
+		.cardClass textarea{
+			margin: 0px 2px 5px 2%;
+			width: 96%;
+			padding: 3px 7px;
+			font-size: 13px;
+		}
+		.cardClass .red{
+			color: #fff;
+			background: red;
+		}
+		.cardClass .yellow{
+			color: #000;
+			background: yellow;
+		}
+		.cardClass .fakuan{
+			color: #fff;
+			background: red;
+		}
+		.el-checkbox__label{
+			width: 50px;
+		}
+	</style>
+</head>
+<body>
+<div class="adminsilder">
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">考核评分</h1>
+	</header>
+	<div class="mui-content">
+		<ul class="mui-table-view adminUl">
+			<li class="mui-table-view-cell">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" v-for="item in adminList" v-if="item.id==1||item.id==6||item.id==13"
+						style="padding: 0px 5px 0px 3px;">
+						<div style="height: 3rem; color: #3DB9E8;">
+							<h4 style="line-height: 2.5rem;">{{item.title}}({{item.number}}分)</h4>
+						</div>
+					</li>
+					<li class="mui-table-view-cell" v-else>
+						<span>{{item.title}}</span>
+						<div class="block">
+							<el-slider
+									:max='item.number'
+									:min='0'
+									:step='0.5'
+									v-model="item.score"
+									@change='sliderChange($event,item.id)'
+									show-input
+							>
+							</el-slider>
+						</div>
+						<div class="deduction" style="padding-left: 5px;">
+							<span style="font-size: 12px;height: 100%;border: 0;">{{item.text}}</span>
+						</div>
+					</li>
+				</ul>
+			</li>
+		</ul>
+
+		<ul class="checkboxUl">
+			<li v-for="che in checkboxList">
+				<input type="checkbox" class="checkbox" :data-uid='che.uid'>
+				<label for="" class="el-checkbox">
+					<span class="el-checkbox__label">{{che.realname}}</span>
+					<span class="el-checkbox__label">{{che.title}}</span>
+				</label>
+			</li>
+		</ul>
+		<div class="cardClass" v-if="show">
+			<textarea rows="3" cols="" placeholder="请输入原因" class="textarea"></textarea>
+			<div style="margin-left: 5px;">
+				<el-button size="small" class='red' @click='commonBrand(2)'>红牌</el-button>
+				<el-button size="small" class='yellow' @click='commonBrand(1)'>黄牌</el-button>
+				<el-button size="small" class='fakuan' @click='commonBrand(3)'>罚款</el-button>
+			</div>
+		</div>
+
+	</div>
+
+
+</div>
+<script src="../../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/element-ui.js"></script>
+<!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
+<script type="text/javascript">
+
+	mui.plusReady(function() {
+		var self = plus.webview.currentWebview();//获取当前窗体对象
+		var bid=self.bid;//接收A页面传入的id参数值
+		var vm = new Vue({
+			el:'.adminsilder',
+			data() {
+				return {
+					adminList: [],//列表
+					checkboxList: [],//多选
+					show: false
+				}
+			},
+			components: {},
+			props: {},
+			computed: {},
+			mounted() {
+				var _this=this;
+				$.ajax({//列表接口内容
+					url: globalUrl+'admin/record/score',
+					type:'post',
+					dataType:'json',
+					headers:{ //设置http头参数
+						"authKey": authKey,
+						"sessionId": sessionId
+					},
+					data:{
+						"bid": bid//项目id
+					},
+					success(res){
+						if (res.code=='200') {
+							if (res.data.length>0) {//有数据
+								_this.adminList=res.data
+								_this.show=true
+							} else{//无数据
+								mui.toast('暂无数据');
+							}
+						} else{
+							console.log(res.error);
+						}
+					},
+					error(err){
+						mui.toast('网络请求失败，请重试');
+					}
+				});
+
+				$.ajax({//checkbox复选框接口
+					url: globalUrl+'admin/record/projectinfo',
+					type:'post',
+					dataType:'json',
+					headers:{ //设置http头参数
+						"authKey": authKey,
+						"sessionId": sessionId
+					},
+					data:{
+						"bid": bid,//项目id
+					},
+					success(res){
+						console.log(res)
+						if (res.code=='200') {
+							if (res.data.user.length>0) {//有数据
+								_this.checkboxList=res.data.user
+							} else{//无数据
+								mui.toast('暂无数据');
+							}
+						} else{
+							console.log(res.error);
+						}
+					},
+					error(err){
+						mui.toast('网络请求失败，请重试');
+					}
+				});
+
+			},
+			methods: {
+				sliderChange(val,kid){//松开滑块时触发
+					var _this=this;
+					var valValue=val;
+					var btnArray = ['否', '是'];
+					mui.confirm('是否确定打分？', '提示', btnArray, function(e) {
+						if (e.index == 1) { //1是确定
+
+							$.ajax({
+								url: globalUrl+'admin/record/editscore',
+								type:'get',
+								dataType:'json',
+								headers:{ //设置http头参数
+									"authKey": authKey,
+									"sessionId": sessionId
+								},
+								data:{
+									"bid": bid,//项目id
+									"kid": kid,// 考核项id
+									"score": val,// 滑块扣分内容
+								},
+								success(res){
+									if (res.status==1) {
+										mui.toast(res.msg);
+									} else{
+										mui.toast(res.msg);
+									}
+								},
+								error(err){
+									mui.toast('网络请求失败，请重试');
+								}
+							});
+
+						} else{
+							$.ajax({//点取消打分时
+								url: globalUrl+'admin/record/score',
+								type:'post',
+								dataType:'json',
+								headers:{ //设置http头参数
+									"authKey": authKey,
+									"sessionId": sessionId
+								},
+								data:{
+									"bid": bid//项目id
+								},
+								success(res){
+									if (res.code=='200') {
+										if (res.data.length>0) {//有数据
+											_this.adminList=res.data
+											window.location.reload()
+										}
+									} else{
+										console.log(res.error);
+									}
+								},
+								error(err){
+									mui.toast('网络请求失败，请重试');
+								}
+							});
+						}
+
+
+					})
+
+
+
+				},
+
+				commonBrand(num){//红黄牌和罚款
+					var textarea=$('.textarea');
+					if($('.checkbox:checked').length == 0){//有一个被勾选就执行下一步
+						mui.toast('请勾选人员');
+						return false
+					}
+					if(textarea.val()==''){
+						mui.toast('请输入原因');
+						return false
+					}
+					var uidStr='';//获得被点checkbox的id
+					$('.checkbox:checked').each(function(){
+						uidStr+=$(this).data('uid')+','//多个被点uid
+					})
+
+					var btnArray = ['否', '是'];
+					mui.confirm('是否进行此操作？', '提示', btnArray, function(e) {
+						if (e.index == 1) { //1是确定
+
+							$.ajax({
+								url: globalUrl+'admin/record/deal',
+								type:'post',
+								dataType:'json',
+								headers:{ //设置http头参数
+									"authKey": authKey,
+									"sessionId": sessionId
+								},
+								data:{
+									"bid": bid,//项目id
+									"uid": uidStr,//被处罚人id
+									"type": num,//type 1黄，2红 3罚款
+									"remark": textarea.val()//remark 备注
+								},
+								success(res){
+									if (res.status==1) {
+										mui.toast(res.msg);
+									} else{
+										mui.toast(res.msg);
+									}
+
+								},
+								error(err){
+									mui.toast('网络请求失败，请重试');
+								}
+							});
+
+						} else{
+							mui.toast('您取消了操作');
+						}
+					})
+
+				}
+
+			}
+
+
+		});
+	})
+	mui.init({
+		beforeback: function() {
+
+			var list = plus.webview.currentWebview().opener();
+			//refresh是A页面自定义事件
+			mui.fire(list, 'refresh');
+			//返回true,继续页面关闭逻辑
+			return true;
+		}
+	});
+</script>
+</body>
+</html>

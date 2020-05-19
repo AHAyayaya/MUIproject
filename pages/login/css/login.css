@@ -1,0 +1,81 @@
+html,
+body,
+.login_box {
+	height: 100%;
+	background: none;
+}
+
+.mt20 {
+	margin-top: 1rem;
+}
+
+.mui-input-group:before,
+.mui-input-group:after {
+	background: none;
+}
+
+.login_main {
+	height: 36%;
+	margin-top: 10%;
+	width: 85%;
+	margin-left: 7.5%;
+}
+
+.login-userinfo {
+	height: 5rem !important;
+}
+
+.login-userinfo label {
+	width: 17%;
+	height: 70%;
+	padding: 5px 10px;
+}
+
+.login-userinfo input {
+	width: 80% !important;
+}
+
+.login-userinfo label img {
+	width: 2rem;
+	height: 40px;
+}
+
+.landBtn {
+	width: 60%;
+	height: 10%;
+	margin: 1rem auto;
+	background: url(../../../assets/images/login/login_btn.png) no-repeat;
+	background-size: 100% 100%;
+	border: none;
+}
+
+.login-menu{
+	height: 2rem;
+	margin-top: 10%;
+}
+
+.fcolor {
+	background: linear-gradient(to right, #636bf6, #95c5ff);
+	-webkit-background-clip: text;
+	color: transparent;
+}
+
+.code {
+	background-color: #fff;
+	font-style: initial;
+	color: #838BFB;
+	font-size: 20px;
+	border: 1px solid #eee;
+	padding: 2px 3px;
+	letter-spacing: 3px;
+	font-weight: bolder;
+	width: 5rem;
+	height: 2rem;
+	text-align: center;
+	position: absolute;
+	right: 3%;
+	top: 30%;
+	cursor: pointer;
+	/*手型样式*/
+	border-radius: 5px;
+}

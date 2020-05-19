@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="css/system.css" />
+
+		<title></title>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">系统设置</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view system_box">
+				<!-- <li class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						新消息提醒
+					</a>
+				</li> -->
+				<li class="mui-table-view-cell clear">
+					<span class="mui-navigate-right ">
+						清除缓存
+					</span>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						隐私协议
+					</a>
+				</li>
+				<li class="mui-table-view-cell abcd">
+					<span class="mui-navigate-right ">
+						版本更新
+					</span>
+				</li>
+				<li class="mui-table-view-cell changepwd">
+					<a class="mui-navigate-right">
+						修改密码
+					</a>
+				</li>
+			</ul>
+			<div class="system_version" style="background-color: #FFFFFF;margin-top: 5%;">
+				V<span class="version"></span>版本
+			</div>
+			<div class="system_version outBtn" style="background-color: #FFFFFF;margin-top: 5%;text-align: center;padding: 0;">
+				<span>退出登录</span>
+			</div>
+		</div>
+
+		<script src="../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/jquery3.4.1.min.js"></script>
+		<script src="../../js/common.js"></script>
+		<script type="text/javascript">
+			mui.plusReady(function(){
+			    mui.getJSON("../../manifest.json", null, function(manifest){
+			        var versionName = manifest.version.name;
+			        var versionCode = Number(manifest.version.code);
+							$(".version").text(versionName);
+			    });
+					// 清除缓存
+					$(document).on('tap', '.clear', function() {
+						plus.cache.calculate(function(size) {
+										sizeCache = size;
+										var size_m = parseFloat(sizeCache / (1024 * 1024)).toFixed(2);
+										if(size_m > 1) {
+												mui.confirm("您目前的系统缓存为" +size_m + "M？", "清除缓存", ["确认", "取消"], function(e) {
+														if(e.index == 1) {} else {
+																plus.cache.clear(function() {
+																		alert("缓存清除完毕")
+																});
+														}
+												});
+										}
+								});
+					});	
+					// 下载更新
+					$(document).on('tap', '.abcd', function() {
+						dowload();
+					})
+					// 开始下载
+					function dowload (){
+						var options = {method:"GET"};
+						dtask = plus.downloader.createDownload(appUrl, options );
+						dtask.addEventListener( "statechanged", function(task,status){   
+							// return false
+							switch(task.state) {
+								case 1: // 开始
+									mui.toast("开始下载...")
+								break;
+								case 2: // 已连接到服务器
+									mui.toast("连接到服务器...")
+									// document.getElementById("new_grade_content").innerHTML = "正在下载: "
+									mui.toast("正在下载: ")
+								break;
+								case 3: // 已接收到数据
+									alert(task.downloadedSize)    // 已下载文件大小
+					                // alert(task.totalSize)    // 文件大小
+									
+								break;
+								case 4: // 下载完成
+									mui.toast("下载完成！")                
+									plus.io.resolveLocalFileSystemURL(task.filename, function(entry) { 
+												 alert(entry.toLocalURL()+"")  // 显示下载的文件存储绝对地址
+												console.log(entry.toLocalURL())     //绝对地址                                      
+										   });
+									alert(task.filename)  // 显示下载好的文件名称
+								break;
+							}
+						} );
+						dtask.start();         
+					}
+			});
+			// 退出登录
+			$(document).on('tap', '.outBtn', function() {
+				var btnArray = ['否', '是'];
+				mui.confirm('是否退出登录？', '提示', btnArray, function(e) {
+					if (e.index == 1) { //1是确定
+						localStorage.removeItem('authKey');
+						localStorage.removeItem('sessionId');
+						setTimeout(function() {
+							mui.openWindow({
+								url: '../login/login.html'
+							});
+						}, 500)
+					}
+				})
+			})
+			$(document).on('tap', '.changepwd', function() {
+				setTimeout(function() {
+					mui.openWindow({
+						url: '../changepwd/changepwd.html'
+					});
+				}, 500)
+			})
+		</script>
+	</body>
+</html>

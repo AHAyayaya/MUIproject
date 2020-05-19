@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="../../../../css/mui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/menu/notice.css" />
+	<title></title>
+</head>
+<body>
+<div id="notice">
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="javascript:window.history.go(-1);"></a>
+		<h1 class="mui-title">通知公告</h1>
+	</header>
+	<div class="mui-scroll-wrapper notice_box">
+		<div class="mui-scroll ">
+			<ul class="mui-table-view ">
+				<li class="mui-table-view-cell" v-for="item in datanotice">
+					<p class="notice_date">{{item.create_time}}</p>
+					<span>
+								<h4>{{item.title}}</h4>
+								<p>{{item.content}}</p>
+							</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+</div>
+<script src="../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	new Vue({
+		el: '#notice',
+		data() {
+			return {
+				datanotice: []
+			}
+		},
+		components: {},
+		props: {},
+		computed: {},
+		mounted() {
+			var _this = this;
+			$.ajax({
+				url: globalUrl + 'oa/announcement/index',
+				type: 'post',
+				dataType: 'json',
+				headers: { //设置http头参数
+					"authKey": authKey,
+					"sessionId": sessionId
+				},
+				data: {},
+				success(res) {
+					if (res.code == '200') {
+						$.each(res.data.list, function(index, value) {
+							localStorage.setItem('noticeid', value.id); //当前被点击的id
+						});
+						if (res.data.list.length > 0) {
+							_this.datanotice = res.data.list
+						} else {
+							mui.toast('暂无数据');
+						}
+					} else {
+						mui.toast(res.error);
+					}
+				},
+				error(err) {
+					mui.toast('网络请求失败，请重试');
+				}
+			});
+		}
+
+
+	})
+</script>
+</body>
+</html>

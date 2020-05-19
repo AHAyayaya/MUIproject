@@ -1,0 +1,33 @@
+html,body,#newsdetail,.newsdetailbox{
+	height: 100%;
+}
+
+.newsdetailbox{
+	background: none;
+}
+
+.newsdetailtop{
+	text-align: center;
+	height: 7%;
+}
+
+.newsdetailmain{
+	width: 90%;
+	height: auto;
+	margin-left: 5%;
+	margin-top: 10%;
+	text-indent: 2em;
+	font-size: 1rem;
+}
+
+.newsdetailimg{
+	width: 90%;
+	height: 30%;
+	margin-left: 5%;
+	text-align: center;
+}
+
+.newsdetailimg img{
+	height: 100%;
+	width: 100%;
+}

@@ -1,0 +1,22 @@
+.news_li{
+	height: 7rem;
+}
+.news_img{
+  line-height: 42px;
+  width: 30%;
+  height: 6rem;
+}
+.news_container{
+	text-overflow: ellipsis; 
+  white-space: nowrap;
+  overflow: hidden;
+  width: 50%;
+}
+.news-content{
+	height: 3rem;
+	width: 68%;
+	line-height: 17px;
+	margin: 5px 0;
+	font-size: 12px;
+	overflow: hidden;
+}

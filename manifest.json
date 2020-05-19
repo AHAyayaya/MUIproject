@@ -1,0 +1,346 @@
+{
+    "@platforms" : [ "android", "iPhone", "iPad" ],
+    "id" : "H55F20730", /*应用的标识，创建应用时自动生成，勿手动修改*/
+    "name" : "区管道路养护", /*应用名称，程序桌面图标名称*/
+    "version" : {
+        "name" : "0.0.7", /*应用版本名称*/
+        "code" : "83"
+    },
+    "description" : "", /*应用描述信息*/
+    "icons" : {
+        "72" : "icon.png"
+    },
+    "launch_path" : "index.html", /*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+    "developer" : {
+        "name" : "", /*开发者名称*/
+        "email" : "", /*开发者邮箱地址*/
+        "url" : "http://www.dcloud.io"
+    },
+    "permissions" : {
+        "Cache" : {
+            "description" : "管理应用缓存"
+        },
+        "Console" : {
+            "description" : "跟踪调试输出日志"
+        },
+        "Events" : {
+            "description" : "应用扩展事件"
+        },
+        "Contacts" : {}
+    },
+    "plus" : {
+        "splashscreen" : {
+            "autoclose" : true, /*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
+            "waiting" : true,
+            "delay" : 1500
+        },
+        "runmode" : "liberate", /*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
+        "signature" : "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==", /*可选，保留给应用签名，暂不使用*/
+        "distribute" : {
+            "apple" : {
+                "appid" : "", /*iOS应用标识，苹果开发网站申请的appid，如io.dcloud.HelloH5*/
+                "mobileprovision" : "", /*iOS应用打包配置文件*/
+                "password" : "", /*iOS应用打包个人证书导入密码*/
+                "p12" : "", /*iOS应用打包个人证书，打包配置文件关联的个人证书*/
+                "devices" : "universal", /*iOS应用支持的设备类型，可取值iphone/ipad/universal*/
+                "frameworks" : []
+            },
+            "google" : {
+                "packagename" : "", /*Android应用包名，如io.dcloud.HelloH5*/
+                "keystore" : "", /*Android应用打包使用的密钥库文件*/
+                "password" : "", /*Android应用打包使用密钥库中证书的密码*/
+                "aliasname" : "", /*Android应用打包使用密钥库中证书的别名*/
+                "minSdkVersion" : 19,//支持安卓最低版本4.4.2
+                "permissions" : [
+                    "<uses-feature android:name=\"android.hardware.camera\"/>",
+                    "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
+                    "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+                    "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
+                    "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
+                    "<uses-permission android:name=\"android.permission.INTERNET\"/>",
+                    "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
+                    "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+                    "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+                    "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                ]
+            },
+            "orientation" : [ "portrait-primary", "portrait-secondary" ], /*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
+            "icons" : {
+                "ios" : {
+                    "prerendered" : true, /*应用图标是否已经高亮处理，在iOS6及以下设备上有效*/
+                    "auto" : "", /*应用图标，分辨率：512x512，用于自动生成各种尺寸程序图标*/
+                    "iphone" : {
+                        "normal" : "", /*iPhone普通屏幕程序图标，分辨率：57x57*/
+                        "retina" : "", /*iPhone高分屏程序图标，分辨率：114x114*/
+                        "retina7" : "", /*iPhone iOS7高分屏程序图标，分辨率：120x120*/
+                        "spotlight-normal" : "", /*iPhone Spotlight搜索程序图标，分辨率：29x29*/
+                        "spotlight-retina" : "", /*iPhone高分屏Spotlight搜索程序图标，分辨率：58x58*/
+                        "spotlight-retina7" : "", /*iPhone iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
+                        "settings-normal" : "", /*iPhone设置页面程序图标，分辨率：29x29*/
+                        "settings-retina" : ""
+                    },
+                    "ipad" : {
+                        "normal" : "", /*iPad普通屏幕程序图标，分辨率：72x72*/
+                        "retina" : "", /*iPad高分屏程序图标，分辨率：144x144*/
+                        "normal7" : "", /*iPad iOS7程序图标，分辨率：76x76*/
+                        "retina7" : "", /*iPad iOS7高分屏程序图标，分辨率：152x152*/
+                        "spotlight-normal" : "", /*iPad Spotlight搜索程序图标，分辨率：50x50*/
+                        "spotlight-retina" : "", /*iPad高分屏Spotlight搜索程序图标，分辨率：100x100*/
+                        "spotlight-normal7" : "", /*iPad iOS7 Spotlight搜索程序图标，分辨率：40x40*/
+                        "spotlight-retina7" : "", /*iPad iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
+                        "settings-normal" : "", /*iPad设置页面程序图标，分辨率：29x29*/
+                        "settings-retina" : ""
+                    }
+                },
+                "android" : {
+                    "mdpi" : "", /*普通屏程序图标，分辨率：48x48*/
+                    "ldpi" : "", /*大屏程序图标，分辨率：48x48*/
+                    "hdpi" : "C:/Users/Administrator/Desktop/logo/72.png", /*高分屏程序图标，分辨率：72x72*/
+                    "xhdpi" : "C:/Users/Administrator/Desktop/logo/96.png", /*720P高分屏程序图标，分辨率：96x96*/
+                    "xxhdpi" : "C:/Users/Administrator/Desktop/logo/144.png",
+                    "xxxhdpi" : "C:/Users/Administrator/Desktop/logo/192.png"
+                }
+            },
+            "splashscreen" : {
+                "ios" : {
+                    "iphone" : {
+                        "default" : "", /*iPhone3启动图片选，分辨率：320x480*/
+                        "retina35" : "", /*3.5英寸设备(iPhone4)启动图片，分辨率：640x960*/
+                        "retina40" : ""
+                    },
+                    "ipad" : {
+                        "portrait" : "", /*iPad竖屏启动图片，分辨率：768x1004*/
+                        "portrait-retina" : "", /*iPad高分屏竖屏图片，分辨率：1536x2008*/
+                        "landscape" : "", /*iPad横屏启动图片，分辨率：1024x748*/
+                        "landscape-retina" : "", /*iPad高分屏横屏启动图片，分辨率：2048x1496*/
+                        "portrait7" : "", /*iPad iOS7竖屏启动图片，分辨率：768x1024*/
+                        "portrait-retina7" : "", /*iPad iOS7高分屏竖屏图片，分辨率：1536x2048*/
+                        "landscape7" : "", /*iPad iOS7横屏启动图片，分辨率：1024x768*/
+                        "landscape-retina7" : ""
+                    }
+                },
+                "android" : {
+                    "mdpi" : "", /*普通屏启动图片，分辨率：240x282*/
+                    "ldpi" : "", /*大屏启动图片，分辨率：320x442*/
+                    "hdpi" : "C:/Users/Administrator/Desktop/logo/480.png", /*高分屏启动图片，分辨率：480x762*/
+                    "xhdpi" : "C:/Users/Administrator/Desktop/logo/720.png", /*720P高分屏启动图片，分辨率：720x1242*/
+                    "xxhdpi" : "C:/Users/Administrator/Desktop/logo/1080.png"
+                }
+            },
+            "plugins" : {
+                "ad" : {}
+            }
+        }
+    },
+    "fullscreen" : false,
+    "dependencies" : {
+        "pages" : {
+            "index.html" : {
+                "resources" : [ "pages/home/home.html", "pages/agency/todo.html" ],
+                "refer" : [
+                    "pages/agency/agency.html",
+                    "pages/profile/profile.html",
+                    "pages/login/login.html",
+                    "pages/todo/todo.html"
+                ],
+                "priority" : 0
+            },
+            "pages/home/home.html" : {
+                "resources" : [],
+                "refer" : [
+                    "pages/home/menu/emergency/emergency.html",
+                    "pages/home/menu/notice.html",
+                    "pages/home/time-progress.html",
+                    "pages/home/project-progress.html",
+                    "index.html",
+                    "pages/home/menu/assess/assess.html",
+                    "pages/home/menu/news.html",
+                    "pages/home/menu/sign/sign.html",
+                    "pages/home/time-progress/time-progress.html",
+                    "pages/home/project-progress/project-progress.html",
+                    "pages/home/menu/news/news.html",
+                    "pages/home/menu/notice/notice.html",
+                    "pages/home/menu/assess/assess/assess.html",
+                    "pages/home/menu/assess/assess-score/assess-score.html",
+                    "pages/home/menu/assess/assess1/assess.html",
+                    "pages/home/menu/assess/score/score.html",
+                    "pages/login/login.html"
+                ],
+                "priority" : 0
+            },
+            "pages/home/menu/emergency/emergency.html" : {
+                "resources" : [
+                    "assets/images/index/menu/emergency/emergency_btn_bg.png",
+                    "assets/images/index/menu/emergency/emergency_bg.jpg"
+                ],
+                "refer" : [
+                    "pages/home/menu/emergency/check.html",
+                    "pages/home/menu/emergency/declaration.html",
+                    "pages/home/menu/emergency/node.html",
+                    "pages/home/menu/emergency/everyday.html"
+                ],
+                "priority" : 0
+            },
+            "pages/login/login.html" : {
+                "resources" : [],
+                "refer" : [
+                    "pages/profile/profile.html",
+                    "pages/changepwd/changepwd.html",
+                    "pages/register/register-phone.html",
+                    "index.html"
+                ],
+                "priority" : 0
+            },
+            "pages/home/menu/assess/assess.html" : {
+                "resources" : [
+                    "assets/images/index/menu/assess/card.png",
+                    "assets/images/index/menu/assess/score_bg.png",
+                    "assets/images/index/menu/assess/project_bg.png"
+                ],
+                "refer" : [ "pages/home/menu/assess/assess_score.html" ],
+                "priority" : 0
+            },
+            "pages/changepwd/changepwd.html" : {
+                "resources" : [
+                    "assets/images/changepwd/change_phone.png",
+                    "assets/images/changepwd/change_pwd.png",
+                    "assets/images/changepwd/change_bg.png",
+                    "assets/images/changepwd/change_msg.png",
+                    "assets/images/changepwd/change_btn.png"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/profile/profile.html" : {
+                "resources" : [],
+                "refer" : [
+                    "pages/profile/system.html",
+                    "pages/profile/completed.html",
+                    "pages/profile/profiledata.html",
+                    "pages/profile/realname.html",
+                    "pages/profile/project-detail.html",
+                    "pages/profile/safe.html",
+                    "pages/profile/approval.html"
+                ],
+                "priority" : 0
+            },
+            "pages/profile/completed.html" : {
+                "resources" : [],
+                "refer" : [ "pages/profile/projectdata.html", "pages/profile/project-detail.html" ],
+                "priority" : 0
+            },
+            "pages/register/register-phone.html" : {
+                "resources" : [],
+                "refer" : [ "pages/register/register-realname.html" ],
+                "priority" : 0
+            },
+            "pages/register/register-realname.html" : {
+                "resources" : [],
+                "refer" : [ "pages/register/register_finish.html" ],
+                "priority" : 0
+            },
+            "pages/home/menu/assess/assess/assess.html" : {
+                "resources" : [],
+                "refer" : [ "pages/home/menu/assess/adminscore/adminscore.html" ],
+                "priority" : 0
+            },
+            "pages/home/menu/assess/assess1/assess.html" : {
+                "resources" : [],
+                "refer" : [
+                    "pages/home/menu/assess/score/score.html",
+                    "pages/home/menu/assess/approval_score/approval_score.html"
+                ],
+                "priority" : 0
+            },
+            "pages/profile/system.html" : {
+                "resources" : [],
+                "refer" : [ "pages/login/login.html" ],
+                "priority" : 0
+            },
+            "pages/home/time-progress/time-progress.html" : {
+                "resources" : [],
+                "refer" : [ "pages/profile/project-detail.html" ],
+                "priority" : 0
+            },
+            "pages/home/project-progress/project-progress.html" : {
+                "resources" : [],
+                "refer" : [ "pages/profile/project-detail.html" ],
+                "priority" : 0
+            }
+        },
+        "idle" : {
+            "resources" : [
+                "pages/home/home.css",
+                "assets/images/login/login_btn.png",
+                "assets/images/register/register_fail.png",
+                "assets/images/index/project.png",
+                "assets/images/profile/profile_score.png",
+                "assets/images/index/patrol_active.png",
+                "assets/images/register/register_phone_active.png",
+                "assets/images/login/check_btn_bg.png",
+                "pages/login/css/style.css",
+                "assets/images/register/register_phone.png",
+                "assets/images/login/login_bg.jpg",
+                "assets/images/profile/profile_more.png",
+                "js/mui.js",
+                "assets/images/index/profile.png",
+                "assets/images/index/index_img.jpg",
+                "assets/images/index/time.png",
+                "assets/images/login/login_change.jpg",
+                "assets/images/login/login_code.png",
+                "assets/images/register/register_star.png",
+                "assets/images/index/news.png",
+                "assets/images/index/emergency.png",
+                "fonts/mui.ttf",
+                "css/mui.css",
+                "assets/images/profile/profile_bg.jpg",
+                "assets/images/profile/profile_system.png",
+                "assets/images/profile/profile_safe_w.png",
+                "assets/images/register/register_drop.png",
+                "assets/images/register/register_btn.png",
+                "assets/images/index/agency.png",
+                "assets/images/changepwd/change_wrong.png",
+                "assets/images/index/patrol.png",
+                "assets/images/register/register_ok.png",
+                "pages/login/js/mui.enterfocus.js",
+                "assets/images/register/register_business.png",
+                "css/index.css",
+                "js/mui.min.js",
+                "assets/images/index/assess.png",
+                "pages/home/home.js",
+                "assets/images/index/sign.png",
+                "assets/images/register/register_finish_active.png",
+                "assets/images/register/register_realname.png",
+                "assets/images/index/notice.png",
+                "assets/images/profile/profile_safe.png",
+                "assets/images/profile/profile_data.png",
+                "assets/images/register/examine_bg.jpg",
+                "assets/images/login/login_pwd.png",
+                "assets/images/index/agency_active.png",
+                "assets/images/login/login_phone.png",
+                "pages/login/js/app.js",
+                "assets/images/index/profile_active.png",
+                "assets/images/index/special.png",
+                "assets/images/profile/profile_attestation.png",
+                "assets/images/register/register_error.png",
+                "assets/images/register/register_realname_active.png",
+                "assets/images/register/register_finish.png",
+                "css/mui.min.css"
+            ]
+        }
+    },
+    "screenOrientation" : [ "portrait-primary", "portrait-secondary" ]
+}

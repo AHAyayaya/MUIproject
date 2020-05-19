@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="css/profiledata.css" />
+		<link rel="stylesheet" type="text/css" href="css/profile.css" />
+		<title></title>
+		<style type="text/css">
+			.user_config_li {
+				height: 3.5rem;
+				line-height: 1.5rem;
+				padding: 15px 15px;
+			}
+
+			.mui-navigate-right:after {
+				content: '';
+			}
+
+			.profiledatbox label img {
+				border: 1px solid #ccc;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="profiledataVue">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="window.history.go(-1);"></a>
+				<h1 class="mui-title">个人资料</h1>
+			</header>
+			<div class="mui-content">
+				<div class="user_img">
+
+					<div class="profiledatbox">
+						<label for="profiledatImage">
+							<img :src="avterimg" alt="" id="profiledatImg">
+						</label>
+						<input type="file" name="img" id="profiledatImage">
+					</div>
+					<!-- <span style="font-size: 12px;">点击头像可更改头像</span> -->
+				</div>
+				<ul class="mui-table-view data_box">
+					<li class="mui-table-view-cell user_config_li">
+						<a class="mui-navigate-right">
+							<span>手机号</span>
+							<span class="data_box_span">{{profiledatList.username}}</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell user_config_li">
+						<a class="mui-navigate-right">
+							<span>姓名</span>
+							<span class="data_box_span">{{profiledatList.realname}}</span>
+						</a>
+					</li>
+					<!-- <li class="mui-table-view-cell user_config_li">
+                 <a class="mui-navigate-right">
+                     <span>性别</span>
+                     <span class="data_box_span">男</span>
+                 </a>
+             </li> -->
+					<li class="mui-table-view-cell user_config_li">
+						<a class="mui-navigate-right">
+							<span>我的职位</span>
+							<span class="data_box_span">{{profiledatList.post}}</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell user_config_li">
+						<a class="mui-navigate-right">
+							<span>单位类别</span>
+							<span class="data_box_span">{{profiledatList.structure_name}}</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell user_config_li">
+						<a class="mui-navigate-right">
+							<span>我的公司</span>
+							<span class="data_box_span">{{profiledatList.company}}</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script src="../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init({
+				beforeback: function() {
+
+					var list = plus.webview.currentWebview().opener();
+					//refresh是A页面自定义事件
+					mui.fire(list, 'refresh');
+					//返回true,继续页面关闭逻辑
+					return true;
+				}
+			});
+			// $(function(){
+			var vm = new Vue({
+				el: '.profiledataVue',
+				data() {
+					return {
+						profiledatList: [],
+						avterimg: '../../assets/images/register/register_phone_active.png'
+					}
+				},
+				components: {},
+				props: {},
+				computed: {},
+				mounted() {
+					var _this = this;
+					$.ajax({
+						url: globalUrl + 'admin/users/info',
+						type: 'post',
+						dataType: 'json',
+						headers: { //设置http头参数
+							"authKey": authKey,
+							"sessionId": sessionId
+						},
+						data: {},
+						success(res) {
+							if (res.code == '200') {
+								if (res.data.id > 0) { //有数据
+									_this.profiledatList = res.data
+									if (res.data.img != '') {
+										$('.profiledatbox label').css('background', 'none');
+									}
+									_this.avterimg = res.data.img
+								} else { //无数据
+									mui.toast('暂无数据');
+								}
+							} else {
+								console.log(res.error);
+							}
+						},
+						error(err) {
+							mui.toast('网络请求失败，请重试');
+						}
+					});
+
+				},
+				methods: {}
+			});
+
+			// })
+
+			//上传图片接口
+			$('#profiledatImage').on('change', function() {
+				var fileObj = document.getElementById("profiledatImage").files[0]; // js 获取文件对象
+				if (fileObj.type == 'image/jpeg' || fileObj.type == 'image/png') { //只能上传jpg和png格式
+					if (typeof(fileObj) == "undefined" || fileObj.size <= 0) {
+						alert("请选择文件，且文件不能为空");
+						return false;
+					}
+					if (fileObj.size >= 104857600) {
+						alert("请上传小于100M的文件！");
+						return false;
+					}
+					var formFile = new FormData();
+					// formFile.append("action", "UploadVMKImagePath");
+					formFile.append("file", fileObj); //加入文件对象
+					formFile.append("uid", "1"); //加入文件对象
+					formFile.append("filetype", "img"); //是图片值为img
+					// formFile.append("filetype", "file"); //是文件值为file,上传哪种要通过fileObj.type判断
+					formFile.append("name", "img"); //加入文件对象
+					formFile.append("module", "crm_contacts"); //加入文件对象
+					formFile.append("module_id", "1"); //加入文件对象
+					var data = formFile;
+					// for (var key of formFile.entries()) {//返回接口的全部参数
+					// 	console.log(key[0] + ', ' + key[1]);
+					// }
+					$.ajax({
+						url: globalUrl + 'admin/base/imgup1',
+						type: 'post',
+						dataType: 'json',
+						data: data,
+						cache: false,
+						processData: false, //参数进行序列化处理
+						contentType: false, //必须
+						success(res) {
+							if (res.state == 1) { //code为0失败,1成功
+								$('#profiledatImg').attr('src', res.path);
+								// $('.profiledatbox label').css('background','none');
+							} else {
+								mui.toast(res.path);
+								return false
+							}
+
+							$.ajax({ //内部ajax
+								url: globalUrl + 'admin/record/editavatar',
+								type: 'post',
+								dataType: 'json',
+								headers: { //设置http头参数
+									"authKey": authKey,
+									"sessionId": sessionId
+								},
+								data: {
+									"path": res.file_path //项目id
+								},
+								success(re) {
+									mui.toast(re.error);
+								},
+								error(err) {
+									mui.toast('网络请求失败，请重试');
+								}
+							});
+
+						},
+						error(err) {
+							mui.toast('网络请求失败，请重试');
+						}
+					});
+
+				} else {
+					mui.toast('上传格式不正确，请重试');
+				}
+
+
+			})
+		</script>
+	</body>
+</html>

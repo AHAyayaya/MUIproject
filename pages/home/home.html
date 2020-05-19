@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="../../css/mui.css" />
+	<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css" />
+	<link rel="stylesheet" type="text/css" href="css/home.css" />
+
+	<style type="text/css">
+		.mui-icon .mui-badge {
+			padding: 0 5px;
+		}
+		.posiSpan {
+			position: relative;
+			top: 1px;
+		}
+
+		.green {
+			background: #5FB878 !important;
+			height: 6px;
+		}
+		.red {
+			background: #FE0000 !important;
+			height: 6px;
+		}
+	</style>
+	<title></title>
+</head>
+<body>
+<div class="homeVue">
+	<!--背景图片-->
+	<div class="img">
+		<img src="../../assets/images/index/index_img.jpg" />
+	</div>
+	<!--九宫格菜单开始-->
+	<ul class="mui-table-view mui-grid-view mui-grid-9" id="menu-box">
+		<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4 grid-menu">
+			<span class="mui-icon menu-size"><img src="../../assets/images/index/menu/sign.png" /></span>
+			<div class="mui-media-body">每日签到</div>
+		</li>
+		<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4 grid-menu">
+					<span class="mui-icon menu-size"><img src="../../assets/images/index/menu/notice.png" />
+						<span class="mui-badge mui-badge-red">
+							<!-- <span class="posiSpan"></span> -->
+						</span>
+					</span>
+			<div class="mui-media-body">通知公告</div>
+		</li>
+		<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4 grid-menu">
+			<span class="mui-icon menu-size"><img src="../../assets/images/index/menu/news.png" /></span>
+			<div class="mui-media-body">新闻资讯</div>
+		</li>
+		<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4 grid-menu" style="border-bottom-width: 0px;">
+			<span class="mui-icon menu-size"><img src="../../assets/images/index/menu/emergency.png" /></span>
+			<div class="mui-media-body">应急养护</div>
+		</li>
+		<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4 grid-menu" style="border-bottom-width: 0px;">
+			<span class="mui-icon menu-size"><img src="../../assets/images/index/menu/special.png" /></span>
+			<div class="mui-media-body">专项养护</div>
+		</li>
+		<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4 grid-menu" style="border-bottom-width: 0px;">
+			<span class="mui-icon menu-size"><img src="../../assets/images/index/menu/assess.png" /></span>
+			<div class="mui-media-body">考核管理</div>
+		</li>
+	</ul>
+	<!--九宫格菜单结束-->
+	<!--进度开始-->
+	<div class="mui-input-row" style="background-color: #EEEEEE;">
+		<label>待办事项</label>
+	</div>
+	<div class="progress">
+		<!--项目进度开始-->
+		<div class="project-progress grid-menu boxshadow">
+			<div class="project-left">
+				<div class="project_icon"></div>
+				<span class="project_text">项目进度</span>
+			</div>
+			<div class="project-right">
+				<div class="layui-progress itemProgress" lay-showpercent="true">
+					<div class="red layui-progress-bar" v-if="homeList.jindu_num>80" :lay-percent="homeList.jindu_num+'%'" :style="'width:'+homeList.jindu_num+'%'">
+						<span class="layui-progress-text" style="width: 100%;display: block;">{{homeList.jindu}}</span>
+					</div>
+					<div class="green layui-progress-bar" v-if="homeList.jindu_num<=80" :lay-percent="homeList.jindu_num+'%'" :style="'width:'+homeList.jindu_num+'%'">
+						<span class="layui-progress-text" style="width: 100%;display: block;">{{homeList.jindu}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--项目进度结束-->
+		<!--时间进度开始-->
+		<div class="time-progress grid-menu boxshadow">
+			<div class="time-left">
+				<div class="time_icon"></div>
+				<span class="time_text">时间进度</span>
+			</div>
+			<div class="time-right">
+				<div class="layui-progress timeProgress" lay-showpercent="true">
+					<div class="red layui-progress-bar" v-if="homeList.time_jindu_num>80" :lay-percent="homeList.time_jindu_num+'%'" :style="'width:'+homeList.time_jindu_num+'%'">
+						<span class="layui-progress-text" style="width: 100%;display: block;">{{homeList.time_jindu}}</span>
+					</div>
+					<div class="green layui-progress-bar" v-if="homeList.time_jindu_num<=80" :lay-percent="homeList.time_jindu_num+'%'" :style="'width:'+homeList.time_jindu_num+'%'">
+						<span class="layui-progress-text" style="width: 100%;display: block;">{{homeList.time_jindu}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--时间进度结束-->
+	</div>
+	<!--进度结束-->
+
+</div>
+
+<script src="../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../layui/layui.all.js"></script>
+
+<script type="text/javascript">
+	console.log(11111)
+	
+	window.addEventListener('refresh', function(e) { //执行刷新
+		location.reload();
+	});
+	mui.plusReady(function() {
+		var page = ["menu/sign/sign.html", "menu/notice/notice.html", "menu/news/news.html",
+			"menu/emergency/emergency.html", "menu/emergency/emergency.html", "menu/assess/assess1/assess.html",
+			"./project-progress/project-progress.html", "./time-progress/time-progress.html"
+		];
+		var arr = document.getElementsByClassName("grid-menu");
+		for (var i = 0; i < arr.length; i++) {
+			! function(i) {
+
+				arr[i].addEventListener("tap", function() {
+					var projecttype = 0
+					if (i == 3) {
+						projecttype = 1 //1应急养护  2专项养护
+					}
+					if (i == 4) {
+						projecttype = 2 //1应急养护  2专项养护
+					}
+					mui.openWindow({
+						url: page[i],
+						id: page[i],
+						extras: {
+							projecttype: projecttype,
+						}
+					})
+
+				})
+			}(i);
+		}
+	})
+
+	var vm = new Vue({
+		el: '.homeVue',
+		data() {
+			return {
+				homeList: [],
+				// show: false
+			}
+		},
+		components: {},
+		props: {},
+		computed: {},
+		mounted() {
+			var _this = this;
+			$.ajax({
+				url: globalUrl + 'admin/record/projectlist',
+				type: 'post',
+				dataType: 'json',
+				headers: { //设置http头参数
+					"authKey": authKey,
+					"sessionId": sessionId
+				},
+				data: {
+					"is_finished": 0 //1完成,0未完成
+				},
+				success(res) {
+					if (res.code == '200') {
+						if (res.data.list.length > 0) { //有数据
+							_this.homeList = res.data.list[0]
+						} else { //无数据
+							return false
+						}
+					} else {
+						console.log(res.error);
+					}
+				},
+				error(err) {
+					mui.toast('网络请求失败，请重试');
+				}
+			});
+
+		},
+		methods: {}
+	});
+	$(function() {
+		// $.ajax({//公告数量接口
+		// 	url: globalUrl+'oa/announcement/index',
+		// 	type:'post',
+		// 	dataType:'json',
+		// 	headers:{ //设置http头参数
+		// 		"authKey": authKey,
+		// 		"sessionId": sessionId
+		// 	},
+		// 	data:{},
+		// 	success(res){
+		// 		if (res.code=='200') {
+		// 			if (res.data.list.length>0) {//有数据
+		// 				$('.posiSpan').text(res.data.list.length)
+		// 			} else{//无数据
+		// 				$('.posiSpan').text('')
+		// 			}
+		// 		} else{
+		// 			console.log(res.error);
+		// 		}
+		// 	},
+		// 	error(err){
+		// 		mui.toast('网络请求失败，请重试');
+		// 	}
+		// })
+
+	})
+</script>
+<script type="text/javascript">
+	mui.init({
+		beforeback: function() {
+			return false;
+		}
+	})
+</script>
+</body>
+</html>

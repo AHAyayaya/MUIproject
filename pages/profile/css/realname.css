@@ -1,0 +1,80 @@
+.realname_box{
+	height: 20rem;
+	width: 90%;
+	margin-top: 25%;
+	margin-left: 5%;
+	background-color: #FFFFFF;
+}
+.user_portrait{
+	position: absolute;
+  top: 6rem;
+  left: 40%;
+  width: 20%;
+}
+.realname_box_top_left{
+	margin-top: 10%;
+}
+.realname_box_top{
+  padding: 5% 10% 0 10%;
+  height: 60%;
+  box-shadow: 1px 1px 5px #e2e2e2;
+  background: url(../../../assets/images/profile/realname_bg.png)no-repeat ;
+  background-size: 100% 100%;
+  text-align: center;
+}
+
+.realname_box_top_left p ,h4{
+	color: #FFFFFF;
+}
+.realname_box_top_right{
+	text-align: center;
+  padding-top: 5%;
+  background-image: url(../../../assets/images/profile/profile_score.png);
+  background-size: 100%;
+  background-repeat: round;
+  width: 100%;
+  height: 5.5rem;
+  float: right
+}
+
+.user_portrait img,.realname_box_top_right img{
+	width: 100%;
+	height: 100%;
+}
+.realname_box_bottom{
+	display: flex;
+	/*background-color: #F0AD4E;*/
+  height: 3rem;
+  margin: 5%;
+  width: 90%;
+  border-radius: 14px;
+  box-shadow: 1px 1px 5px #e2e2e2;	
+}
+.realname_box_bottom_left{
+	display: flex;
+  line-height: 50px;
+  font-size: 12px;
+  margin-left: 10%;
+}
+.realname_box_bottom_left img{
+	width: 20%;
+  height: 80%;
+  margin-top: 4px;
+}
+.realname_box_bottom_left span{
+	margin-left: 5%;
+}
+.realname_box_bottom_right{
+	width: 30%;
+  margin-right: 5%;
+}
+.realname_box_bottom_right span{
+	float: right;
+  font-size: 12px;
+  line-height: 2rem;
+  padding-left: 15px;
+  width: 5rem;
+  border: 1px solid #1dade5;
+  margin-top: 9%;
+  border-radius: 13px;
+}

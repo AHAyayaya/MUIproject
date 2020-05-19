@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Hello MUI</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" href="../../../css/mui.css">
+	<link rel="stylesheet" type="text/css" href="../css/approval.css" />
+
+	<style type="text/css">
+		.mui-input-row label,.mui-input-row input{
+			height: 35px;
+			font-size: 12px;
+			width: 30%;
+			padding: 11px 7px 11px 11px;
+		}
+		.mui-table-view-cell {
+			padding: 5px;
+		}
+		.mui-input-row label ~ input{
+			width: 68%;
+		}
+		.tapLi{
+			margin-bottom: 5px;
+		}
+		.approval_content {
+			margin-top: 3%;
+			margin-bottom: 3%;
+		}
+		.mui-table-view-cell:after{
+			background: none;
+		}
+		.approval-pass {
+			top: 4%;
+		}
+		.rightText{
+			float: right;
+			width: 68%;
+			margin-bottom: 0;
+			padding-left: 0;
+			border: 0;
+			height: 35px;
+			font-size: 12px;
+			padding: 7px 7px 11px 11px;
+		}
+	</style>
+</head>
+<body>
+<div class="approvalVue">
+	<!--头部开始-->
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff !important;"></a>
+		<h1 class="mui-title">我的审批</h1>
+		<button class="mui-icon mui-icon-plus mui-pull-right add-btn" v-if="show"></button>
+	</header>
+	<!--头部结束-->
+	<!--审批内容开始-->
+	<div class="mui-content approval_box" style="height: 400px;">
+		<div class="approval_main">
+			<!--审批选项卡开始-->
+			<div id="segmentedControl" class="mui-segmented-control approval_control">
+				<div class="mui-control-item mui-active daiShenHe" @click='daiShenHe'>
+					<img src="../../../assets/images/profile/wait.png" style="padding: 10px;" />
+					<span class="dai">待审批</span>
+				</div>
+				<div class="mui-control-item yiShenHe" @click='yiShenHe'>
+					<img src="../../../assets/images/profile/already.png" />
+					<span class="yi">已审批</span>
+				</div>
+			</div>
+			<!--审批选项卡结束-->
+			<!--审批详情开始-->
+			<div class="approval_content">
+
+				<div id="item1" class="mui-control-content mui-active">
+					<ul class="mui-table-view show">
+						<li class="tapLi mui-table-view-cell approval-li" v-for="(item,index) in approvalList"
+							:key='index' :data-eid='item.eid'>
+							<form class="mui-input-group">
+								<div class="mui-input-row">
+									<label>申请人</label>
+									<div class="rightText">{{item.create_user}}</div>
+								</div>
+								<div class="mui-input-row">
+									<label>审批事项</label>
+									<div class="rightText">{{item.title}}</div>
+								</div>
+								<div class="mui-input-row">
+									<label>申请时间</label>
+									<div class="rightText">{{item.create_time}}</div>
+								</div>
+								<div class="mui-input-row">
+									<label>申请状态</label>
+									<div class="rightText">{{item.check_val}}</div>
+								</div>
+							</form>
+							<div class="approval-pass" v-if="item.check_status==2?1:0"></div><!-- 审核通过图标 -->
+							<div class="approval-reject" v-if="item.check_status==3?1:0"></div><!-- 审核驳回图标 -->
+						</li>
+					</ul>
+				</div>
+
+			</div>
+			<!--审批详情结束-->
+		</div>
+	</div>
+	<!--审批内容结束-->
+
+</div>
+
+<script src="../../../js/mui.js"></script>
+<script src="../../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	window.addEventListener('refresh', function(e) { //执行刷新
+		location.reload();
+	});
+	var vm = new Vue({
+		el: '.approvalVue',
+		data() {
+			return {
+				approvalList: [],
+				show: false
+			}
+		},
+		components: {},
+		props: {},
+		computed: {},
+		mounted() {
+			this.daiShenHe();
+			var _this=this
+			$.ajax({
+				url: globalUrl + 'admin/record/userrule',
+				type: 'post',
+				dataType: 'json',
+				headers: { //设置http头参数
+					"authKey": authKey,
+					"sessionId": sessionId
+				},
+				data: {},
+				success(res) {
+					if (res.code == '200') {
+						// 1或2只显示一般上报,3都显示,4都隐藏
+						if (res.error==4){//1项目总监 2现场监理 3项目经理 4管理员
+							_this.show=false
+						}else{
+							_this.show=true
+						}
+					} else {
+						console.log(res.error);
+					}
+				},
+				error(err) {
+					mui.toast('网络请求失败，请重试');
+				}
+			});
+		},
+		methods: {
+			daiShenHe(){
+				$('.dai').css('color','#007aff')
+				$('.yi').css('color','#000')
+				var _this = this;
+				$.ajax({
+					url: globalUrl + 'admin/record/applylist',
+					type: 'post',
+					dataType: 'json',
+					headers: { //设置http头参数
+						"authKey": authKey,
+						"sessionId": sessionId
+					},
+					data: {
+						"is_sh": 0//1审批 0待审批
+					},
+					success(res) {
+						if (res.code == '200') {
+							if (res.error.length > 0) { //有数据
+								$('#item1').show();
+								_this.approvalList = res.error
+							} else { //无数据
+								mui.toast('暂无数据');
+								$('#item1').hide();
+							}
+						} else {
+							console.log(res.error);
+						}
+					},
+					error(err) {
+						mui.toast('网络请求失败，请重试');
+					}
+				});
+
+			},
+			yiShenHe(){
+				$('.dai').css('color','#000')
+				$('.yi').css('color','#007aff')
+				var _this = this;
+				$.ajax({
+					url: globalUrl + 'admin/record/applylist',
+					type: 'post',
+					dataType: 'json',
+					headers: { //设置http头参数
+						"authKey": authKey,
+						"sessionId": sessionId
+					},
+					data: {
+						"is_sh": 1//1审批 0待审批
+					},
+					success(res) {
+						if (res.code == '200') {
+							if (res.error.length > 0) { //有数据
+								$('#item1').show();
+								_this.approvalList = res.error
+							} else { //无数据
+								mui.toast('暂无数据');
+								$('#item1').hide();
+							}
+						} else {
+							console.log(res.error);
+						}
+					},
+					error(err) {
+						mui.toast('网络请求失败，请重试');
+					}
+				});
+
+			}
+
+		}
+	});
+	$(document).on('tap', '.tapLi', function() {//详情跳转
+		var eid = $(this).data('eid');
+		setTimeout(function() {
+			//跳转传参
+			mui.openWindow({
+				url: 'approval-item.html',
+				extras: {
+					eid: eid //自定义扩展参数，可以用来处理页面间传值
+				}
+			});
+		}, 500);
+	})
+</script>
+
+<script type="text/javascript">
+	$(document).on('tap', '.add-btn', function() {
+		setTimeout(function() {
+			//跳转传参
+			mui.openWindow({
+				url: 'delay-approval.html',
+				/* extras: {
+                    bid: bid //自定义扩展参数，可以用来处理页面间传值
+                } */
+			});
+		}, 500);
+	});
+</script>
+</body>
+</html>

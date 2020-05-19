@@ -1,0 +1,40 @@
+.content{
+	background-color: #FFFFFF;
+}
+.safe-nav-bar{
+	box-shadow: none;
+}
+.safe-box{
+	display: flex; 
+	background:linear-gradient(to right,#0bbafb,#4285ec);
+	color: #FFFFFF;
+	padding: 5%;
+}
+.safe-box-left{
+	padding-top: 13%;
+}
+.safe-box-right img{
+	width: 50%;
+  float: right;
+}
+.safe-box-bottom{
+	background-color: #FFFFFF;
+}
+.safe-box-bottom label{
+	display: block;
+  border-bottom: 1px solid #eee;
+  height: 4rem;
+  line-height: 4rem;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+.safe-btn{
+	margin-top: 15%;	
+}
+.safe-btn button{
+	background: linear-gradient(to left,#0bbafb,#4285ec);
+	width: 90%;
+	margin-left: 5%;
+	border: none;
+	border-radius: 20px;
+}

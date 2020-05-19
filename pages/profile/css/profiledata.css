@@ -1,0 +1,15 @@
+.user_img{
+	margin-top: 5%;
+	text-align: center;
+	line-height: 10px;
+}
+.user_img img{
+	width: 30%;
+}
+.data_box{
+	margin-top: 5%;
+}
+.data_box_span{
+	float: right;
+	margin-right: 5%;
+}

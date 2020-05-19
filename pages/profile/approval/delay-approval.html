@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" type="text/css" href="../../../css/mui.css" />
+	<link rel="stylesheet" type="text/css" href="../css/delay-approval.css" />
+
+	<script src="../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+	<style type="text/css">
+		.checkbox{
+			float: left !important;
+			width: 5% !important;
+			margin-left: 5%;
+			margin-top: 3.1%;
+		}
+		.label{
+			width: 90% !important;
+			padding: 11px 2px !important;
+		}
+		.labelName{
+			width: 29.5% !important;
+		}
+		.nameDiv{
+			width: 65%;
+		}
+		.delay-reason textarea {
+		    margin-top: 7px;
+			font-size: 14px;
+		}
+	</style>
+	
+	<title>延期申报</title>
+</head>
+<body>
+<div id="delay-approval">
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">延期申报</h1>
+	</header>
+
+	<div class="mui-content delay-box">
+		<ul class="mui-table-view delay-ul">
+			<li class="mui-table-view-cell delay-li">
+				<label>申报类型:</label>
+				<select id="selecttype" name="" class="type_id" @change='sign'>
+					<option value="0">请选择</option>
+					<option value="20">签到延期申报</option>
+					<option value="21" v-if="optionYq">项目延期申报</option>
+				</select>
+			</li>
+			<li class="mui-table-view-cell delay-li">
+				<label class="labelName">申报人:</label>
+				<div class="nameDiv">{{realname}}</div>
+			</li>
+			<li class="mui-table-view-cell hideli">
+				<label>申报人当前负责项目:</label>
+				<div class="mui-input-row mui-checkbox" v-for="item in datadelay.list">
+					<label class="label">{{item.name}}</label>
+					<input name="Checkbox" class="checkbox" :data-did="item.business_id" type="radio">
+				</div>
+			</li>
+			<li class="mui-table-view-cell delay-reason">
+				<label>申报原因:</label>
+				<textarea class="delayremark" placeholder="详细描述一下吧"></textarea>
+			</li>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block everyday_btn" @click="delay_btn">提交</button>
+		</ul>
+	</div>
+</div>
+
+
+
+<script type="text/javascript">
+	var realname = localStorage.getItem('realName'); //用户名
+	
+	new Vue({
+		el: '#delay-approval',
+		data() {
+			return {
+				datadelay: [],
+				realname: realname,
+				optionYq: false
+			}
+		},
+		mounted() {
+			var _this = this;
+			$.ajax({
+				url: globalUrl + 'admin/record/beforeapply',
+				type: 'post',
+				dataType: 'json',
+				headers: { //设置http头参数
+					"authKey": authKey,
+					"sessionId": sessionId
+				},
+				data: {},
+				success(res) {
+					if (res.code == '200') {
+						_this.datadelay = res.data
+					} else {
+						console.log(res.error);
+					}
+				},
+				error(err) {
+					mui.toast('网络请求失败，请重试');
+				}
+			});
+			$.ajax({
+				url: globalUrl + 'admin/record/userrule',
+				type: 'post',
+				dataType: 'json',
+				headers: { //设置http头参数
+					"authKey": authKey,
+					"sessionId": sessionId
+				},
+				data: {},
+				success(res) {
+					if (res.code == '200') {
+						// 1或2只显示一般上报,3都显示,4都隐藏
+						if (res.error==3){//1项目总监 2现场监理 3项目经理 4管理员
+							_this.optionYq=true
+						}else{
+							_this.optionYq=false
+						}
+					} else {
+						console.log(res.error);
+					}
+				},
+				error(err) {
+					mui.toast('网络请求失败，请重试');
+				}
+			});
+
+		},
+		methods: {
+			sign() {
+				var type_id = parseInt($(".type_id").val());
+				if(type_id=='20'){
+					$('.hideli').hide();//隐藏当前负责项目
+				}
+				if(type_id=='21'){
+					$('.hideli').show();//显示当前负责项目
+				}
+			},
+			delay_btn() {
+				var _this = this;
+				var did_str = "";
+				var type_id = parseInt($(".type_id").val());
+				if(type_id<1){
+					mui.toast('请选择申报类型');
+					return false
+				}
+				var delayremark = $(".delayremark").val();
+				$(".checkbox:checked").each(function(){
+					did_str += $(this).data("did") + ","
+				})
+				$.ajax({
+					url: globalUrl + 'admin/record/apply',
+					type: 'post',
+					dataType: 'json',
+					headers: { //设置http头参数
+						"authKey": authKey,
+						"sessionId": sessionId
+					},
+					data: {
+						"bid_str": did_str,
+						"category_id": type_id,
+						"remark": delayremark,
+						"ziliao": ""
+					},
+					success(res) {
+						if (res.code == 200) {
+							mui.toast(res.error);
+							mui.back();
+						} else {
+							mui.toast(res.error);
+						}
+					},
+					error(err) {
+						mui.toast('网络请求失败，请重试');
+					}
+				});
+			}
+		}
+	});
+</script>
+</body>
+</html>

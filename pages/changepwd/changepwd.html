@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="../../css/mui.css"/>
+	<link rel="stylesheet" type="text/css" href="changepwd.css"/>
+	
+	<script src="../../js/mui.js"></script>
+	<script src="../../js/jquery3.4.1.min.js"></script>
+	<script src="../../js/common.js"></script>
+	<title>修改密码</title>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">修改密码</h1>
+</header>
+<div class="change_box">
+	<form class="mui-input-group">
+		<div class="mui-input-row ">
+			<label><img src="../../assets/images/changepwd/change_phone.png"/></label>
+			<input type="text" class="mui-input-clear phoneNum" disabled=true>
+		</div>
+		<div class="mui-input-row">
+			<label><img src="../../assets/images/changepwd/change_msg.png"/></label>
+			<input type="text" class="mui-input-clear smsCodeInput" placeholder="短信验证码">
+			<button type="button" class="sendcodebtn" id="sendcodebutton">获取验证码</button>
+		</div>
+		<div class="mui-input-row">
+			<label><img class="change_box_img" src="../../assets/images/changepwd/change_pwd.png"/></label>
+			<input type="password" class="mui-input-clear oldPwdInput" placeholder="请输入原密码">
+		</div>
+		<div class="mui-input-row">
+			<label><img class="change_box_img" src="../../assets/images/changepwd/change_pwd.png"/></label>
+			<input type="password" name="pw" id="pw1" class="mui-input-clear pwdInput" placeholder="请输入新密码">
+		</div>
+		<div class="mui-input-row">
+			<label><img src="../../assets/images/changepwd/change_pwd.png"/></label>
+			<input type="password" name="pw" id="pw2" class="mui-input-clear confirmPwd" placeholder="确认新密码">
+			<!-- <input type="password" name="pw" id="pw2" class="mui-input-clear" onkeyup="validate()" placeholder="确认新密码"> -->
+			<span id="tip"></span>
+		</div>
+	</form>
+	<div style="text-align: center;">
+		<button type="button" class="mui-btn mui-btn-blue mui-btn-block change_btn">确认</button>
+		<span class="small-font">本操作将会重置您的登录密码，请牢记您的新密码</span>
+	</div>
+	<div class="change_box_bottom">
+		<img style="" src="../../assets/images/changepwd/change_bg.png"/>
+	</div>
+</div>
+
+
+
+
+<script type="text/javascript">
+	//获取验证码
+	// $(document).on('tap','#sendcodebutton',function(){
+	// 	for (i = 1;i <=60 * 1;i++){
+	// 		window.setTimeout("updatebutton(" + i +")",i * 1000);
+	// 	}
+	// })
+	// function updatebutton(num){
+	// 	var secs = 60 * 1;
+	// 	if (num == secs){
+	// 		$("#sendcodebutton").text("发送验证码");
+	// 		document.getElementById("sendcodebutton").removeAttribute("disabled");
+	// 	}else{
+	// 		printnr = secs - num;
+	// 		$("#sendcodebutton").text(printnr + "s");
+	// 		document.getElementById("sendcodebutton").setAttribute("disabled",true);
+	// 	}
+	// }
+	//确认密码
+	// function validate() {
+	// 	var pw1 = document.getElementById("pw1").value;
+	// 	var pw2 = document.getElementById("pw2").value;
+	// 	if(pw1 == pw2) {
+	// 		document.getElementById("tip").innerHTML="<font color='green'>两次密码相同</font>";
+	// 	}
+	// 	else {
+	// 		document.getElementById("tip").innerHTML="<img src='../../assets/images/changepwd/change_wrong.png' style='width: 1.5rem;line-height: 10px;'></img><small color='#f1404b' style='text-align: center;'>两次密码填写不一致</small>";
+	// 	}
+	// }
+	
+	$(function(){
+		var userName=localStorage.getItem('userName');//获取userName登录的手机号
+		$('.phoneNum').val(userName)//赋值
+	})
+	var sendcodebtn=$('.sendcodebtn');//获取验证码按钮
+	function updatebutton(num){//倒计时函数
+		var secs = 60 * 1;
+		if (num == secs) {
+			sendcodebtn.text("获取验证码").attr('disabled',false).css('background','#fff');
+		} else {
+			printnr = secs - num;
+			sendcodebtn.text(printnr + "s").attr('disabled',true).css('background','#e8e8e8');
+		}
+	}
+	//短信验证码
+	sendcodebtn.on('tap',function(){
+		var phoneNumVal=$.trim($('.phoneNum').val());
+		if (phoneNumVal==''){
+			mui.toast('请输入手机号');
+			return false
+		} else{
+			$.ajax({
+				url: globalUrl+'admin/record/sendsms',
+				type:'post',
+				dataType:'json',
+				headers:{ //设置http头参数
+					"authKey": authKey,
+					"sessionId": sessionId
+				},
+				data:{
+					"username": phoneNumVal
+				},
+				success(res){
+					if (res.code=='200') {
+						localStorage.setItem('smsCodePwd',res.smsCode);//把验证码存储在浏览器中
+						mui.toast(res.error);
+						for (i = 1;i <=60 * 1;i++){//请求成功开启倒计时
+							var time=setTimeout("updatebutton(" + i +")",i * 1000);
+						}
+					} else{
+						mui.toast(res.error);
+					}
+				},
+				error(err){
+					mui.toast('网络请求失败，请重试');
+				}
+			});
+	
+		}
+	
+	})
+	//确认按钮
+	$('.change_btn').on('tap',function(){
+		var phoneNumVal=$.trim($('.phoneNum').val()),//手机号
+			oldPwdInputVal=$.trim($('.oldPwdInput').val()),//原密码
+			pwdInputVal=$.trim($('.pwdInput').val()),//新密码
+			confirmPwdVal=$.trim($('.confirmPwd').val()),//确认新密码
+			smsCodeInputVal=$.trim($('.smsCodeInput').val());//验证码
+		if (phoneNumVal==''){
+			mui.toast('请输入手机号!');
+			return false
+		} else{
+			var phoneNumReg = /^1[3|4|5|6|7|8|9][0-9]{9}$/;
+			if(!(phoneNumReg.test(phoneNumVal))){
+				mui.toast('手机号格式不正确');
+				return false;
+			}
+		}
+		if (smsCodeInputVal==''){
+			mui.toast('请输入验证码');
+			return false
+		}
+		if (oldPwdInputVal==''){
+			mui.toast('请输入原密码');
+			return false
+		} else{
+			var oldPwdInputValReg=/^(\w){6,20}$/;
+			if(!(oldPwdInputValReg.test(oldPwdInputVal))){
+				mui.toast('密码格式不正确');
+				return false
+			}
+		}
+		if (pwdInputVal==''){
+			mui.toast('请输入新密码');
+			return false
+		} else{
+			var pwdInputValReg=/^(\w){6,20}$/;
+			if(!(pwdInputValReg.test(pwdInputVal))){
+				mui.toast('密码格式不正确');
+				return false
+			}
+		}
+		if (confirmPwdVal==''){
+			mui.toast('请确认新密码');
+			return false
+		} else{
+			if (pwdInputVal!=confirmPwdVal) {
+				mui.toast('两次输入的密码不一致');
+				return false
+			}
+		}
+		var smsCodePwdVal=localStorage.getItem('smsCodePwd');//拿验证码缓存
+		if(smsCodeInputVal!=smsCodePwdVal) {
+			mui.toast('验证码信息有误');
+			return false;
+		}
+		$.ajax({
+			url: globalUrl+'admin/record/resetpassword1',
+			type:'post',
+			dataType:'json',
+			headers:{ //设置http头参数
+				"authKey": authKey,
+				"sessionId": sessionId
+			},
+			data:{
+				"old_pwd": oldPwdInputVal,//原始密码
+				"new_pwd": pwdInputVal//新密码
+			},
+			success(res){
+				if (res.code=='200') {
+					mui.toast('修改成功');
+					setTimeout(function () {
+						//跳转传参
+						mui.openWindow({
+							url:'../profile/profile.html',
+							// id:''//String类型,要打开的界面的id
+						});
+					},1000);
+				} else{
+					mui.toast(res.error);
+				}
+			},
+			error(err){
+				mui.toast('网络请求失败，请重试');
+			}
+		});
+		
+		
+		
+		
+		
+	})
+</script>
+</body>
+</html>

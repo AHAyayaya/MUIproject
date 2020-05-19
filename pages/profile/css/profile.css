@@ -1,0 +1,78 @@
+html,body,.user-content{
+	height: 100%;
+}
+.user-content{
+	background: url(../../../assets/images/profile/profile_bg.jpg)no-repeat;
+	background-size: 100% 100%;
+}
+.user_info{
+	width: 40%;
+	height: 20%;
+	position: absolute;
+	top: 8%;
+	left: 30%;
+}
+.user_config{
+	width: 94%;
+	/* height: 30rem; */
+	position: absolute;
+	top: 45%;
+	left: 3%;
+}
+.user_config_li{
+	height: 3.5rem;
+	line-height: 3rem;
+	padding: 9px 15px;
+}
+.user_box{
+	background: none;
+	padding:0 !important;
+}
+.user_box .mui-media-body{
+	color: #FFFFFF !important;
+}
+.mui-table-view:before{
+	background: none;
+}
+.mui-table-view:after{
+	background: none;
+}
+.user_box img{
+	width: 5rem;
+	border-radius: 50%;
+}
+
+.profile_box{
+	border-radius: 5px;
+	box-shadow: 0 0px 5px 0.5px #66b1f9;
+	margin-bottom: 5%;
+}
+.mui-table-view .profile_icon{
+	max-width: 3rem;
+}
+
+
+
+.profiledatbox{
+	height: 100px;
+	text-align: -webkit-center;
+}
+.profiledatbox label{
+	padding: 0;
+	width: 100px;
+	height: 100%;
+	/* background: url(../../../assets/images/register/register_phone_active.png) no-repeat center center; */
+	display: block;
+	background-size: 100%;
+}
+.profiledatbox label img{
+	display: block;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	border: transparent;
+	overflow: hidden;
+}
+#profiledatImage{
+	display: none;
+}

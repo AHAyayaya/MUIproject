@@ -1,0 +1,92 @@
+html,body,.assess_box,.assess_box_ul{
+ height: 100%;
+ margin: 0;
+ padding: 0;
+}
+.assess_box_li{
+ height: 25%;
+ background: url(../../../../../../assets/images/index/menu/assess/project_bg.png) no-repeat;
+ background-size: 100% 100%;
+ padding-right: 0;
+}
+.assess_box{
+ width: 94%;
+ margin-left: 3%;
+ background: none;
+}
+.assess_content{
+ float: left;
+ width: 60%;
+ height: 90%;
+ margin-left: 5px;
+}
+.assess_content h4{
+ font-size: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 25%;
+  padding-top: 5%;
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+.assess_content_main{
+ font-size: 12px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  height: 50%;
+}
+.assess_content_date{
+ font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 15%;
+}
+.assess_score{
+ float: left;
+ width: 35%;
+ height: 90%;
+}
+.assess_ul li{
+ list-style: none;
+ background: url(../../../../../../assets/images/index/menu/assess/card.png);
+ float: left;
+ width: 100%;
+}
+.assess_score_card{
+ height: 35%;
+  display: flex;
+  margin-left: 5%;
+}
+.assess_score_card span{
+ display: block;
+  width: 2rem;
+  height: 2rem;
+  background-size: 100% 100%;
+  font-size: 20px;
+}
+.assess_span{
+ background: url(../../../../../../assets/images/index/menu/assess/card.png);
+ }
+ .assess_span span{
+     margin-top: 1px;
+     width: 100%;
+     transform: scale(0.5);
+     font-size: 14px;
+     -webkit-transform: scale(0.5);
+}
+.assess_score_get{
+ width: 4rem;
+  height: 4rem;
+  background: url(../../../../../../assets/images/index/menu/assess/score_bg.png);
+  background-size: 100% 100%;
+  margin-left: 36%;
+  padding: 19px;
+  padding-top: 23px;
+  font-size: 15px;
+  text-align: center;
+  font-weight: bold;
+}

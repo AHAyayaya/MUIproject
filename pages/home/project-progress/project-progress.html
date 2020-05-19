@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="../../../css/mui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../layui/css/layui.css" />
+	<link rel="stylesheet" type="text/css" href="../css/project-progress.css" />
+
+	<style type="text/css">
+		.green {
+			background: #5FB878 !important;
+			height: 10px;
+		}
+
+		.red {
+			background: #FE0000 !important;
+			height: 10px;
+		}
+	</style>
+	<title></title>
+</head>
+<body>
+<div class="progressVue">
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #fff;"></a>
+		<h1 class="mui-title">项目进度</h1>
+	</header>
+	<div class="mui-content project_pro_box">
+		<ul class="mui-table-view project_pro_ul mui-itemJindu">
+
+			<li class="mui-table-view-cell project_pro_li" v-for="(item,index) in progressList" :data-bid="item.bid" :key="index">
+				<div class="project_msg">
+					<h4 class="fl" style="width: 50%;font-size: 12px;"><b>{{item.project_name}}</b></h4>
+					<p class="fr" style="width: 50%;text-align: right;font-size: 12px;">{{item.starttime}}~{{item.endtime}}</p>
+				</div>
+				<div class="project_main" style="font-size: 12px;">
+					<h4 class="fl" style="width: 50%;"><b>项目进度</b></h4>
+					<div class="layui-progress project_progress" lay-showpercent="true">
+						<div class="red layui-progress-bar" v-if="item.jindu_num>80" :lay-percent="item.jindu_num+'%'" :style="'width:'+item.jindu_num+'%'">
+							<span class="layui-progress-text" style="width: 100%;display: block;">{{item.jindu}}</span>
+						</div>
+						<div class="green layui-progress-bar" v-if="item.jindu_num<=80" :lay-percent="item.jindu_num+'%'" :style="'width:'+item.jindu_num+'%'">
+							<span class="layui-progress-text" style="width: 100%;display: block;">{{item.jindu}}</span>
+						</div>
+					</div>
+					<p style="font-size: 12px;">当前项目节点：{{item.jiedian}}</p>
+				</div>
+			</li>
+
+		</ul>
+	</div>
+</div>
+
+<script src="../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../layui/layui.all.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '.progressVue',
+		data() {
+			return {
+				progressList: [],
+				// show: false
+			}
+		},
+		components: {},
+		props: {},
+		computed: {},
+		mounted() {
+			var _this = this;
+			$.ajax({
+				url: globalUrl+'admin/record/projectlist',
+				type: 'post',
+				dataType: 'json',
+				headers: { //设置http头参数
+					"authKey": authKey,
+					"sessionId": sessionId
+				},
+				data: {
+					"is_finished": 0//1完成,0未完成
+				},
+				success(res) {
+					if (res.code == '200') {
+						if (res.data.list.length > 0) { //有数据
+							_this.progressList = res.data.list
+							// _this.show = true
+						} else { //无数据
+							// mui.toast('暂无数据');
+							return false
+						}
+					} else {
+						console.log(res.error);
+					}
+				},
+				error(err) {
+					mui.toast('网络请求失败，请重试');
+				}
+			});
+
+		},
+		methods: {}
+	});
+	$(document).on('tap','.project_pro_li',function(){
+		var bid=$(this).data('bid');
+		setTimeout(function () {
+			//跳转传参
+			mui.openWindow({
+				url:'../../profile/project-detail.html',
+				extras: {
+					bid:bid//自定义扩展参数，可以用来处理页面间传值
+				}
+			});
+		},1000);
+	})
+</script>
+</body>
+</html>

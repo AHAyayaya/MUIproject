@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<link rel="stylesheet" type="text/css" href="../../../../css/mui.css" />
+	<link rel="stylesheet" type="text/css" href="sign.css" />
+	<link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+	<title>Document</title>
+</head>
+<body>
+<!--头部开始-->
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">签到/签退</h1>
+</header>
+<!--头部结束-->
+<!--签到内容开始-->
+<div class="mui-content sign-box">
+	<!--签到时间开始-->
+	<div class="sign-date">
+		<div class="date-text">
+			<span class="fl Qdtime">当前时间：</span>
+			<span class="fr QdSpan" style="text-align: end;"></span>
+		</div>
+	</div>
+	<!--线-->
+	<div style="height: 2px;background-color: #EEEEEE;"></div>
+	<!--签到时间结束-->
+	<!--地图定位开始-->
+	<div class="sign-map">
+		<div class="mapcontent" id="container"></div>
+		<div style="height: 25%;padding: 8px;">
+			<div class="date-text">
+				<span class="fl">当前位置：</span>
+				<span class="fr address" style="text-align: end;">地点微调</span>
+			</div>
+			<div class="date-position" style="text-align: left;font-size: 12px;"></div>
+		</div>
+	</div>
+	<!--线-->
+	<div style="height: 2px;background-color: #EEEEEE;"></div>
+	<!--地图定位结束-->
+	<!--拍照上传开始-->
+	<div class="sign-camera">
+		<div class="date-text" style="padding: 8px;">
+			<span class="fl">拍照上传：</span>
+			<span class="fr Photograph" style="text-align: end;">
+					<label for="headImage">
+						<img src="../../../../assets/images/index/menu/camera.png" />
+					</label>
+				</span>
+		</div>
+		<div class="sign-img">
+			<img class="camerabox" id="headImg" src="" alt="">
+			<input type="file" name="img" id="headImage">
+		</div>
+		<div class="sign-btn">
+			<button class="signInNow" style="background-color: #1CACE4;">马上签到</button>
+			<button class="signOffNow" style="float: right;background-color: #E26E47;">马上签退</button>
+		</div>
+	</div>
+	<!--拍照上传结束-->
+</div>
+<!--签到内容结束-->
+
+<script src="../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+<script src='../../../../js/jquery3.4.1.min.js'></script>
+<script src='../../../../js/common.js'></script>
+<script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+<!-- <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=6f950e2236cdd09ba85d3e43f0376560"></script> -->
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.13&key=6f950e2236cdd09ba85d3e43f0376560"></script>
+<script type="text/javascript">
+	var fileIdSign='';//缩略图id
+	//定位
+	function position(){
+		// var map = new AMap.Map('container');
+		// map.setZoom(15);
+		// map.plugin(['AMap.Scale'], function () {
+		// 	var scale = new AMap.Scale({});
+		// 	map.addControl(scale);
+		// });
+
+		// map.plugin('AMap.Geolocation', function () {
+		// 	var geolocation = new AMap.Geolocation({
+		// 		enableHighAccuracy: true,// 是否使用高精度定位，默认：true
+		// 		convert:true,
+		// 		showMarker:true,
+		// 		panToLocation:true,
+		// 		timeout: 10000
+		// 	});
+
+		// 	geolocation.getCurrentPosition();
+		// 	map.addControl(geolocation);
+		// 	AMap.event.addListener(geolocation, 'complete', onComplete)
+		// 	AMap.event.addListener(geolocation, 'error', onError)
+
+		// 	function onComplete(data) {
+		// 		// data是具体的定位信息
+		// 		console.log(data)
+		// 		$('.date-position').html(data.formattedAddress);//获取到的详细地址
+		// 	}
+
+		// 	function onError(data) {
+		// 		// 定位出错
+		// 		mui.toast('获取地址失败，请刷新重试');
+		// 	}
+		// })
+
+		var map = new AMap.Map('container', {
+				resizeEnable: true
+			});
+		AMap.plugin('AMap.Geolocation', function() {
+			var geolocation = new AMap.Geolocation({
+				enableHighAccuracy: true,//是否使用高精度定位，默认:true
+				timeout: 10000,          //超过10秒后停止定位，默认：5s
+				buttonPosition:'RB',    //定位按钮的停靠位置
+				buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+				zoomToAccuracy: true,   //定位成功后是否自动调整地图视野到定位点
+			});
+			map.addControl(geolocation);
+			geolocation.getCurrentPosition(function(status,result){
+				if(status=='complete'){
+					// onComplete(result)
+					$('.date-position').html(result.formattedAddress);//获取到的详细地址
+				}else{
+					// onError(result)
+					mui.toast('获取地址失败，请刷新重试');
+				}
+			});
+		});
+		// 解析定位结果
+		function onComplete(data) {
+			// localStorage.setItem('ptLat',data.position.lat);
+			// localStorage.setItem('ptLng',data.position.lng);
+			// geocoder(data.position.lng, data.position.lat);//已获取到的经纬度传入参数即可
+			console.log(data)
+			// $('.date-bottom').html(data.formattedAddress);//获取到的详细地址
+		}
+		//解析定位错误信息
+		function onError(data) {
+			// document.getElementById('status').innerHTML='定位失败'
+			// document.getElementById('result').innerHTML = '失败原因排查信息:'+data.message;
+			// mui.toast('获取地址失败，请刷新重试');
+		}
+		//经纬度转换为地址
+		// function geocoder(lnglatX, lnglatY, cityCode) {
+		// 	var geocoder = new AMap.Geocoder({
+		// 		city : cityCode, //城市，默认：“全国”
+		// 		radius : 50 //范围，默认：500
+		// 	});
+		// 	geocoder.getAddress([lnglatX, lnglatY], function(status, result) {
+		// 		if (status == 'complete' && result.info == 'OK') {
+		// 			var address = result.regeocode.formattedAddress;
+		// 			$('.date-bottom').html(address);//获取到的详细地址
+		// 		} else {
+		// 			mui.toast('获取地址失败，请刷新重试');
+		// 		}
+		// 	});
+		// }
+
+	}
+	//时间
+	function showTime() {
+		var newDate = new Date();
+		var year = newDate.getFullYear();//取年份
+		var month = newDate.getMonth() + 1;//取月份
+		var nowday = newDate.getDate();//取天数
+		var week = newDate.getDay();//取星期,0-6星期，0为星期日,6为星期六
+		var hours = newDate.getHours();//取小时
+		var minutes = newDate.getMinutes();//取分钟
+		var seconds = newDate.getSeconds();//取秒
+		//把0-6的week改成星期字幕
+		var weekbox = [];
+		weekbox[0] = '星期日';
+		weekbox[1] = '星期一';
+		weekbox[2] = '星期二';
+		weekbox[3] = '星期三';
+		weekbox[4] = '星期四';
+		weekbox[5] = '星期五';
+		weekbox[6] = '星期六';
+		function t(e) {//小于10时让他显示两位数
+			return e < 10 ? '0' + e : e
+		}
+		month = t(month);//月份
+		nowday = t(nowday);//天数
+		hours = t(hours);//时
+		minutes = t(minutes);//分钟
+		seconds = t(seconds);//秒
+		$('.QdSpan').text(year + "-" + month + "-" + nowday + " " + weekbox[week] + " " + hours + ":" + minutes + ":" + seconds);
+	}
+	$(function(){
+		showTime()
+		position()
+		$('.address').on('tap',function(){
+			position()
+		})
+	})
+
+	//上传图片接口
+	$('#headImage').on('change',function(){
+		var fileObj = document.getElementById("headImage").files[0]; // js 获取文件对象
+		if (fileObj.type=='image/jpeg' || fileObj.type=='image/png') {//只能上传jpg和png格式
+			if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+				alert("请选择文件，且文件不能为空");
+				return false;
+			}
+			if ( fileObj.size >= 104857600) {
+				alert("请上传小于100M的文件！");
+				return false;
+			}
+			var formFile = new FormData();
+			// formFile.append("action", "UploadVMKImagePath");
+			formFile.append("file", fileObj); //加入文件对象
+			formFile.append("uid", "1"); //加入文件对象
+			formFile.append("filetype", "img"); //是图片值为img
+			// formFile.append("filetype", "file"); //是文件值为file,上传哪种要通过fileObj.type判断
+			formFile.append("name", "img"); //加入文件对象
+			formFile.append("module", "crm_contacts"); //加入文件对象
+			formFile.append("module_id", "1"); //加入文件对象
+			var data = formFile;
+			// for (var key of formFile.entries()) {//返回接口的全部参数
+			// 	console.log(key[0] + ', ' + key[1]);
+			// }
+			$.ajax({
+				url: globalUrl+'admin/base/imgup1',
+				type:'post',
+				dataType:'json',
+				data:data,
+				cache: false,
+				processData: false,//参数进行序列化处理
+				contentType: false, //必须
+				
+				success(res){
+					if (res.state==1) { //code为0失败,1成功
+						$('#headImg').attr('src',res.path);
+						$('.camerabox').css('background','none');
+
+						fileIdSign=res.file_id//缩略图id
+					} else{
+						mui.toast(res.path);
+					}
+				},
+				error(err){
+					mui.toast('网络请求失败，请重试');
+				}
+			});
+
+		} else{
+			mui.toast('上传格式不正确，请重试');
+		}
+
+
+	})
+
+	//签到
+	$(document).on('tap','.signInNow',function(){
+		var datePosition=$('.date-position').text();//地址位置
+		if (datePosition=='') {
+			mui.toast('正在更新当前位置...');
+		} else{
+			$.ajax({
+				url: globalUrl+'admin/record/adddayreports',
+				type:'post',
+				dataType:'json',
+				headers:{ //设置http头参数
+					"authKey": authKey,
+					"sessionId": sessionId
+				},
+				data:{
+					"fid": fileIdSign,//缩略图id
+					"addr": datePosition,//addr 地址
+					"type": 1 //1签到2签退
+				},
+				success(res){
+					if (res.code=='200') {
+						mui.toast(res.error);
+						setTimeout(function () {
+							//跳转传参
+							mui.openWindow({
+								url:'../../../../index.html'
+							});
+						},500);
+					} else{
+						mui.toast(res.error);//不同清空返回不同状态,后台有判断
+					}
+
+				},
+				error(err){
+					mui.toast('网络请求失败，请重试');
+				}
+			});
+
+		}
+
+
+	})
+	//签退
+	$(document).on('tap','.signOffNow',function(){
+		var datePosition=$('.date-position').text();//地址位置
+		if (datePosition=='') {
+			mui.toast('正在更新当前位置...');
+		} else{
+			$.ajax({
+				url: globalUrl+'admin/record/adddayreports',
+				type:'post',
+				dataType:'json',
+				headers:{ //设置http头参数
+					"authKey": authKey,
+					"sessionId": sessionId
+				},
+				data:{
+					"fid": fileIdSign,//缩略图id
+					"addr": datePosition,//addr 地址
+					"type": 2 //1签到2签退
+				},
+				success(res){
+					if (res.code=='200') {
+						mui.toast(res.error);
+						setTimeout(function () {
+							//跳转传参
+							mui.openWindow({
+								url:'../../../../index.html'
+							});
+						},500);
+					} else{
+						mui.toast(res.error);//不同清空返回不同状态,后台有判断
+					}
+
+				},
+				error(err){
+					mui.toast('网络请求失败，请重试');
+				}
+			});
+
+		}
+
+	})
+</script>
+
+
+</body>
+</html>

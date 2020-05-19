@@ -1,0 +1,102 @@
+body {
+	background-color: #FFFFFF;
+}
+
+.mui-input-row .mui-btn {
+	position: absolute;
+	left: 69%;
+	width: auto;
+	font-size: 80%;
+	border: none;
+	color: #e26e47;
+	padding: 10px 8px;
+}
+
+.mui-input-group:after {
+	background-color: #FFFFFF;
+}
+
+
+.finishUpload {
+	width: 50%;
+	height: 120px;
+	position: relative;
+	margin: 15px 15px 0 15px;
+}
+
+.finishUploadS {
+	margin-right: 0;
+}
+
+.finishUpload input {
+	display: none;
+}
+
+.finishUpload label {
+	width: 100%;
+	height: 100%;
+	background: url(../../../assets/images/register/register_business.png) no-repeat center center;
+	background-size: 100% 100%;
+	border: 1px solid #c8c7cc;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.finishUpload label img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	/* margin-top: 2%; */
+	/* margin-left: 2%; */
+}
+
+.pop {
+	position: fixed;
+	z-index: 998;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, .3);
+	display: none;
+}
+
+.pop-content {
+	position: absolute;
+	z-index: 999;
+	top: 15%;
+	left: 10%;
+	display: none;
+	height: 70%;
+	width: 80%;
+	background: url(../../../assets/images/register/pop.jpg) no-repeat;
+	background-size: 100% 100%;
+}
+
+.pop-top {
+	width: 40%;
+	height: 25%;
+	margin: 0 auto;
+	text-align: center;
+	line-height: 3rem;
+	margin-top: 15%;
+}
+
+.pop-top span{
+	font-size: 4rem !important;
+	display: block;
+}
+
+.pop-top span, p{
+	color: #fff;
+	font-size: 16px;
+}
+
+.pop-main{
+	width: 80%;
+	height: 45%;
+	margin-top: 30%;
+	margin-left: 10%;
+	text-align: center;
+}

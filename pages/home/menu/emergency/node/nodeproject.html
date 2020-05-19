@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../../../../css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/menu/emergency/myproject.css" />
+		<link rel="stylesheet" type="text/css" href="../../../../profile/css/completed.css" />
+		<script src="../../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../../js/jquery3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<title></title>
+	</head>
+	<body>
+		<div id="nodeproject">
+
+
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title">项目列表</h1>
+			</header>
+			<div class="mui-content project_box">
+				<ul class="mui-table-view ul-top">
+					<li class="mui-table-view-cell mui-media just-li" v-for="item in datanodeproject" :data-bid="item.bid">
+						<img class="mui-media-object mui-pull-left" :src="item.img[0].file_path">
+						<div class="mui-media-body mybox">
+							<div class="mybox-top">
+								<span>{{item.project_name}}</span>
+							</div>
+							<div class="line"></div>
+							<div class="mybox-bottom">
+								<div class="mybox-bottom-top">
+									<div>
+										<label>项目时间:</label><span>{{item.starttime}}至{{item.endtime}}</span>
+									</div>
+									<div>
+										<label>项目进度:</label><span>{{item.jindu}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script type="text/javascript">
+			window.addEventListener('refresh', function(e) { //执行刷新
+				location.reload();
+			});
+			mui.plusReady(function() {
+			var self = plus.webview.currentWebview(); //获取当前窗体对象
+			var projecttype = self.projecttype; //接收A页面传入的id参数值
+				$(function() {
+					new Vue({
+						el: '#nodeproject',
+						data() {
+							return {
+								datanodeproject: []
+							}
+						},
+						mounted() {
+							var _this = this;
+							$.ajax({
+								url: globalUrl + 'admin/record/projectlist',
+								type: 'post',
+								dataType: 'json',
+								headers: { //设置http头参数
+									"authKey": authKey,
+									"sessionId": sessionId
+								},
+								data: {
+									"is_finished": 0 ,// 1完成，0未完成
+									"projecttype":projecttype    //1应急养护  2专项养护
+								},
+								success(res) {
+									if (res.code == '200') {
+										if (res.data.list.length > 0) {
+											_this.datanodeproject = res.data.list
+										} else {
+											_this.dataList = []
+											_this.dataList.starttime = ''
+											_this.dataList.endtime = ''
+											mui.toast('暂无数据');
+										}
+									} else {
+										mui.toast(res.error);
+									}
+								},
+								error(err) {
+									mui.toast('网络请求失败，请重试');
+								}
+							});
+						}
+					})
+				})
+				$(document).on('tap', '.just-li', function() {
+					var bid = $(this).data('bid');
+					setTimeout(function() {
+						//跳转传参
+						mui.openWindow({
+							url: 'mynode.html',
+							extras: {
+								bid: bid //自定义扩展参数，可以用来处理页面间传值  
+							}
+						});
+					}, 1000);
+				})
+			})
+		</script>
+	</body>
+</html>

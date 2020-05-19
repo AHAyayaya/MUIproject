@@ -1,0 +1,29 @@
+.name label ,.phone label,.progress label,.date label{
+	font-size: 20px !important;
+	-webkit-transform: scale(0.5);
+	width: 50%;
+	display: inline-block;
+	float: left;
+}
+.phone label{
+	width: 24%;
+}
+
+.phone{
+	width: 63%;
+}
+.progress,.date{
+	width: 50%;
+}
+.liclick{
+	background-color: #777777 !important;
+}
+.finishimg{
+	height: 3rem;
+	width: 4rem;
+	background: url(../../../assets/images/profile/finish.png) no-repeat; 
+	background-size: 100% 100%;
+	position: absolute;
+  top: 6%;
+  left: 26%;
+}

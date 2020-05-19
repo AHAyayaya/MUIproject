@@ -1,0 +1,26 @@
+.notice_box{
+	margin-top: 44px;
+	background-color: #F0F0F0;
+}
+.notice_box ul{
+	width: 90%;
+	margin-left: 5%; 
+	background: none;
+}
+.notice_date{
+	background-color: #CCCCCC;
+	width: 50%;
+	margin: 5% 0 5% 25% !important;
+	text-align: center;
+	border-radius: 5px;
+	color: #EDEDED;
+}
+.notice_box .mui-table-view:before, .mui-table-view:after,.mui-table-view-cell:after{
+	background-color: #f0f0f0;
+}
+.notice_box span{
+	display: block;
+	background-color: #FFFFFF;
+	padding: 11px 15px;
+	border-radius: 5px;
+}

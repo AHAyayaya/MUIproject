@@ -1,0 +1,16 @@
+body{
+	background-color: #EEEEEE;
+}
+.system_box li{
+	height: 3rem;
+	line-height: 2rem;
+}
+.mui-table-view-cell:after,.mui-table-view:before,.mui-table-view:after{
+	background-color: #eeeeee;
+}
+.system_version{
+	height: 3rem;
+	line-height: 3rem;
+	padding-left: 5%;
+}
+
